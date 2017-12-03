@@ -75,11 +75,49 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="index.html" />
+    <Content Include="js\world\ArcGISTiledLayer.js" />
+    <Content Include="js\world\AutonaviTiledLayer.js" />
+    <Content Include="js\world\BingTiledLayer.js" />
+    <Content Include="js\world\BlendTiledLayer.js" />
+    <Content Include="js\world\Elevation.js" />
+    <Content Include="js\world\Enum.js" />
+    <Content Include="js\world\Event.js" />
+    <Content Include="js\world\Globe.js" />
+    <Content Include="js\world\GoogleTiledLayer.js" />
+    <Content Include="js\world\Image.js" />
+    <Content Include="js\world\Kernel.js" />
+    <Content Include="js\world\Line.js" />
+    <Content Include="js\world\Math.js" />
+    <Content Include="js\world\Matrix.js" />
+    <Content Include="js\world\NokiaTiledLayer.js" />
+    <Content Include="js\world\Object3D.js" />
+    <Content Include="js\world\Object3DComponents.js" />
+    <Content Include="js\world\OsmTiledLayer.js" />
+    <Content Include="js\world\PerspectiveCamera.js" />
+    <Content Include="js\world\Plan.js" />
+    <Content Include="js\world\Ray.js" />
+    <Content Include="js\world\Scene.js" />
+    <Content Include="js\world\ShaderContent.js" />
+    <Content Include="js\world\SosoTiledLayer.js" />
+    <Content Include="js\world\SubTiledLayer.js" />
+    <Content Include="js\world\TextureMaterial.js" />
+    <Content Include="js\world\TiandituTiledLayer.js" />
+    <Content Include="js\world\Tile.js" />
+    <Content Include="js\world\TiledLayer.js" />
+    <Content Include="js\world\TileGrid.js" />
+    <Content Include="js\world\TileMaterial.js" />
+    <Content Include="js\world\Utils.js" />
+    <Content Include="js\world\Vector.js" />
+    <Content Include="js\world\Vertice.js" />
+    <Content Include="js\world\WebGLRenderer.js" />
+    <Content Include="require.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
