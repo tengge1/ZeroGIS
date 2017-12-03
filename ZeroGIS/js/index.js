@@ -14,7 +14,7 @@ window.onload = function () {
 
           function startWebGL() {
               globe = new Globe(canvas);
-              var mapSelector = document.getElementById("mapSelector");
+              var mapSelector = document.getElementById("container");
               mapSelector.onchange = changeTiledLayer;
               changeTiledLayer();
           }
@@ -51,11 +51,11 @@ window.onload = function () {
           }
 
           function initAll() {
-              canvas = document.getElementById("canvasId");
+              canvas = document.getElementById("container");
               startWebGL();
           }
 
-          canvas = document.getElementById("canvasId");
+          canvas = document.getElementById("container");
           startWebGL();
       });
 };
