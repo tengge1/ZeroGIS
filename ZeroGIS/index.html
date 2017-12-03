@@ -1,88 +1,17 @@
-﻿<!doctype html>
-<html style="width:100%;height:100%;">
+﻿<!DOCTYPE html>
+
+<html lang="zh-cn">
 <head>
-    <title>WebGlobe</title>
-    <meta http-equiv="Content-Type" content="text/html" />
-    <meta name="charset" content="utf-8" />
-    <style type="text/css">
-        * {
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-
-    <script type="text/javascript" src="require.js"></script>
-    <script type="text/javascript">
-        require.config({
-            baseUrl: "js",
-            paths: {
-                world: "world"
-            },
-            waitSeconds: 0
-        });
-    </script>
-
-    <script type="text/javascript">
-        window.onload = function () {
-            require(["world/Globe", "world/BingTiledLayer", "world/NokiaTiledLayer", "world/OsmTiledLayer", "world/SosoTiledLayer", "world/TiandituTiledLayer", "world/GoogleTiledLayer"],
-              function (Globe, BingTiledLayer, NokiaTiledLayer, OsmTiledLayer, SosoTiledLayer, TiandituTiledLayer, GoogleTiledLayer) {
-
-                  var canvas, globe;
-
-                  function startWebGL() {
-                      globe = new Globe(canvas);
-                      var mapSelector = document.getElementById("mapSelector");
-                      mapSelector.onchange = changeTiledLayer;
-                      changeTiledLayer();
-                      debugger
-                  }
-
-                  function changeTiledLayer() {
-                      var mapSelector = document.getElementById("mapSelector");
-                      mapSelector.blur();
-                      var newTiledLayer = null;
-                      var args = null;
-                      var value = mapSelector.value;
-                      switch (value) {
-                          case "google":
-                              newTiledLayer = new GoogleTiledLayer();
-                              break;
-                          case "bing":
-                              newTiledLayer = new BingTiledLayer();
-                              break;
-                          case "osm":
-                              newTiledLayer = new OsmTiledLayer();
-                              break;
-                          case "soso":
-                              newTiledLayer = new SosoTiledLayer();
-                              break;
-                          case "tianditu":
-                              newTiledLayer = new TiandituTiledLayer();
-                              break;
-                          default:
-                              break;
-                      }
-
-                      if (newTiledLayer) {
-                          globe.setTiledLayer(newTiledLayer);
-                      }
-                  }
-
-                  function initAll() {
-                      canvas = document.getElementById("canvasId");
-                      startWebGL();
-                  }
-
-                  canvas = document.getElementById("canvasId");
-                  startWebGL();
-              });
-        };
-    </script>
+    <meta charset="utf-8" />
+    <title>ZeroGIS</title>
+    <link href="css/ZeroGIS.css" rel="stylesheet" />
+    <script src="js/require.js"></script>
+    <script src="js/index.js"></script>
 </head>
-<body onselectstart="return false;" style="position:relative;width:100%;height:100%;overflow:hidden;cursor:default;">
+<body onselectstart="return false;" ondragstart="return false;">
     <select id="mapSelector" style="position:absolute;top:20px;right:20px;">
-        <option value="google">Google Map</option>
-        <option value="bing">Bing Map</option>
+        <option value="google">谷歌地图</option>
+        <option value="bing">必应地图</option>
         <option value="osm">OpenStreetMap</option>
         <option value="soso">SOSO地图</option>
         <option value="tianditu">天地图</option>

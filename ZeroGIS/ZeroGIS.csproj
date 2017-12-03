@@ -75,7 +75,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\ZeroGIS.css" />
     <Content Include="index.html" />
+    <Content Include="js\index.js" />
     <Content Include="js\world\ArcGISTiledLayer.js" />
     <Content Include="js\world\AutonaviTiledLayer.js" />
     <Content Include="js\world\BingTiledLayer.js" />
@@ -111,7 +113,7 @@
     <Content Include="js\world\Vector.js" />
     <Content Include="js\world\Vertice.js" />
     <Content Include="js\world\WebGLRenderer.js" />
-    <Content Include="require.js" />
+    <Content Include="js\require.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
