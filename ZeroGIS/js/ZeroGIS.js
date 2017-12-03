@@ -1,0 +1,6 @@
+﻿/**
+* ZeroGIS
+*/
+var ZeroGIS = {
+
+};

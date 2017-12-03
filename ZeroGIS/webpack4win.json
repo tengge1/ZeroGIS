@@ -1,0 +1,19 @@
+﻿{
+  "css": {
+    "source": [
+      "css/ZeroGIS.css"
+    ],
+    "dest": "dist/css",
+    "fileName": "ZeroGIS"
+  },
+
+  "js": {
+    "source": [
+      "js/ZeroGIS.js",
+      "js/TiledLayer/ArcGISTiledLayer.js",
+      "js/TiledLayer/AutonaviTiledLayer.js"
+    ],
+    "dest": "dist/js",
+    "fileName": "ZeroGIS"
+  }
+}

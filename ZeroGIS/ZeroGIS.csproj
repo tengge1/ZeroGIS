@@ -66,13 +66,40 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dist\css\ZeroGIS.css" />
+    <Content Include="dist\js\ZeroGIS.js" />
+    <Content Include="js\Kernel\Elevation.js" />
+    <Content Include="js\Kernel\Enum.js" />
+    <Content Include="js\Kernel\EventModule.js" />
+    <Content Include="js\Kernel\Globe.js" />
+    <Content Include="js\Kernel\Kernel.js" />
+    <Content Include="js\Object3D\Object3D.js" />
+    <Content Include="js\Object3D\Line.js" />
+    <Content Include="js\Object3D\Object3DComponents.js" />
+    <Content Include="js\TiledLayer\ArcGISTiledLayer.js" />
+    <Content Include="js\TiledLayer\AutonaviTiledLayer.js" />
+    <Content Include="js\TiledLayer\BingTiledLayer.js" />
+    <Content Include="js\TiledLayer\BlendTiledLayer.js" />
+    <Content Include="js\TiledLayer\GoogleTiledLayer.js" />
+    <Content Include="js\TiledLayer\NokiaTiledLayer.js" />
+    <Content Include="js\TiledLayer\OsmTiledLayer.js" />
+    <Content Include="js\TiledLayer\TiledLayer.js" />
+    <Content Include="js\Kernel\Image.js" />
+    <Content Include="js\Kernel\MathUtils.js" />
+    <Content Include="js\Kernel\Matrix.js" />
+    <Content Include="js\ZeroGIS.js" />
+    <Content Include="Newtonsoft.Json.dll" />
+    <Content Include="Newtonsoft.Json.xml" />
     <Content Include="packages.config" />
+    <Content Include="webpack4win.exe" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <Content Include="webpack4win.exe.config" />
+    <Content Include="webpack4win.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\ZeroGIS.css" />
