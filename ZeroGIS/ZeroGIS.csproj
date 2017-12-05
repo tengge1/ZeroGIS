@@ -80,6 +80,8 @@
     <Content Include="js\Object3D\Plan.js" />
     <Content Include="js\Object3D\Ray.js" />
     <Content Include="js\Object3D\Scene.js" />
+    <Content Include="js\Object3D\ShaderContent.js" />
+    <Content Include="js\Object3D\TextureMaterial.js" />
     <Content Include="js\TiledLayer\ArcGISTiledLayer.js" />
     <Content Include="js\TiledLayer\AutonaviTiledLayer.js" />
     <Content Include="js\TiledLayer\BingTiledLayer.js" />
@@ -87,6 +89,8 @@
     <Content Include="js\TiledLayer\GoogleTiledLayer.js" />
     <Content Include="js\TiledLayer\NokiaTiledLayer.js" />
     <Content Include="js\TiledLayer\OsmTiledLayer.js" />
+    <Content Include="js\TiledLayer\SosoTiledLayer.js" />
+    <Content Include="js\TiledLayer\SubTiledLayer.js" />
     <Content Include="js\TiledLayer\TiledLayer.js" />
     <Content Include="js\Kernel\Image.js" />
     <Content Include="js\Kernel\MathUtils.js" />
