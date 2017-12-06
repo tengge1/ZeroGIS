@@ -74,7 +74,6 @@
     <Content Include="js\Kernel\Enum.js" />
     <Content Include="js\Kernel\EventModule.js" />
     <Content Include="js\Kernel\Globe.js" />
-    <Content Include="js\Kernel\Kernel.js" />
     <Content Include="js\Kernel\Tile.js" />
     <Content Include="js\Kernel\TileGrid.js" />
     <Content Include="js\Kernel\Utils.js" />

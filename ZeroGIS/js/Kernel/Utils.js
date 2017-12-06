@@ -1,4 +1,7 @@
-﻿ZeroGIS.Utils = {
+﻿/**
+* Utils
+*/
+ZeroGIS.Utils = {
     GREATER: "GREATER",
     GEQUAL: "GEQUAL",
     LESS: "LESS",

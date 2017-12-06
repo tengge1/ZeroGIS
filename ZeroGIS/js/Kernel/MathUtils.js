@@ -15,7 +15,7 @@ ZeroGIS.MathUtils = {
 };
 
 ZeroGIS.MathUtils.isZero = function (value) {
-    if (!Utils.isNumber(value)) {
+    if (!ZeroGIS.Utils.isNumber(value)) {
         throw "invalid value";
     }
     return Math.abs(value) < 0.000001;
@@ -28,10 +28,10 @@ ZeroGIS.MathUtils.isZero = function (value) {
  * @returns {number} 整数的十进制数据
  */
 ZeroGIS.MathUtils.numerationSystemTo10 = function (numSys, strNum) {
-    if (!Utils.isPositiveInteger(numSys)) {
+    if (!ZeroGIS.Utils.isPositiveInteger(numSys)) {
         throw "invalid numSys";
     }
-    if (!Utils.isString(strNum)) {
+    if (!ZeroGIS.Utils.isString(strNum)) {
         throw "invalid strNum";
     }
     var sum = 0;
