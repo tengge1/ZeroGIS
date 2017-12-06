@@ -73,6 +73,8 @@
     <Content Include="js\Kernel\EventModule.js" />
     <Content Include="js\Kernel\Globe.js" />
     <Content Include="js\Kernel\Kernel.js" />
+    <Content Include="js\Kernel\Tile.js" />
+    <Content Include="js\Kernel\TileGrid.js" />
     <Content Include="js\Object3D\Object3D.js" />
     <Content Include="js\Object3D\Line.js" />
     <Content Include="js\Object3D\Object3DComponents.js" />
@@ -82,6 +84,7 @@
     <Content Include="js\Object3D\Scene.js" />
     <Content Include="js\Object3D\ShaderContent.js" />
     <Content Include="js\Object3D\TextureMaterial.js" />
+    <Content Include="js\Object3D\TileMaterial.js" />
     <Content Include="js\TiledLayer\ArcGISTiledLayer.js" />
     <Content Include="js\TiledLayer\AutonaviTiledLayer.js" />
     <Content Include="js\TiledLayer\BingTiledLayer.js" />
@@ -91,6 +94,7 @@
     <Content Include="js\TiledLayer\OsmTiledLayer.js" />
     <Content Include="js\TiledLayer\SosoTiledLayer.js" />
     <Content Include="js\TiledLayer\SubTiledLayer.js" />
+    <Content Include="js\TiledLayer\TiandituTiledLayer.js" />
     <Content Include="js\TiledLayer\TiledLayer.js" />
     <Content Include="js\Kernel\Image.js" />
     <Content Include="js\Kernel\MathUtils.js" />
