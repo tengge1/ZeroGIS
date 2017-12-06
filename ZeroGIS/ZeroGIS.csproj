@@ -68,6 +68,8 @@
   <ItemGroup>
     <Content Include="dist\css\ZeroGIS.css" />
     <Content Include="dist\js\ZeroGIS.js" />
+    <Content Include="js\test.js" />
+    <Content Include="test.html" />
     <Content Include="js\Kernel\Elevation.js" />
     <Content Include="js\Kernel\Enum.js" />
     <Content Include="js\Kernel\EventModule.js" />
@@ -75,6 +77,8 @@
     <Content Include="js\Kernel\Kernel.js" />
     <Content Include="js\Kernel\Tile.js" />
     <Content Include="js\Kernel\TileGrid.js" />
+    <Content Include="js\Kernel\Utils.js" />
+    <Content Include="js\Object3D\Vector.js" />
     <Content Include="js\Object3D\Object3D.js" />
     <Content Include="js\Object3D\Line.js" />
     <Content Include="js\Object3D\Object3DComponents.js" />
@@ -85,6 +89,8 @@
     <Content Include="js\Object3D\ShaderContent.js" />
     <Content Include="js\Object3D\TextureMaterial.js" />
     <Content Include="js\Object3D\TileMaterial.js" />
+    <Content Include="js\Object3D\Vertice.js" />
+    <Content Include="js\Object3D\WebGLRenderer.js" />
     <Content Include="js\TiledLayer\ArcGISTiledLayer.js" />
     <Content Include="js\TiledLayer\AutonaviTiledLayer.js" />
     <Content Include="js\TiledLayer\BingTiledLayer.js" />
