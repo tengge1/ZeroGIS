@@ -6,7 +6,7 @@ ZeroGIS.Globe = function (canvas, args) {
         throw "invalid canvas: not HTMLCanvasElement";
     }
     args = args || {};
-    Kernel.globe = this;
+    ZeroGIS.globe = this;
     this.MAX_LEVEL = 15; //最大的渲染级别15
     this.CURRENT_LEVEL = -1; //当前渲染等级
     this.REFRESH_INTERVAL = 300; //Globe自动刷新时间间隔，以毫秒为单位
@@ -15,8 +15,8 @@ ZeroGIS.Globe = function (canvas, args) {
     this.scene = null;
     this.camera = null;
     this.tiledLayer = null;
-    var vs_content = ShaderContent.SIMPLE_SHADER.VS_CONTENT;
-    var fs_content = ShaderContent.SIMPLE_SHADER.FS_CONTENT;
+    var vs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.VS_CONTENT;
+    var fs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.FS_CONTENT;
     this.renderer = Kernel.renderer = new WebGLRenderer(canvas, vs_content, fs_content);
     this.scene = new Scene();
     var radio = canvas.width / canvas.height;
