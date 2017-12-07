@@ -18,9 +18,9 @@ ZeroGIS.Globe = function (canvas, args) {
     var vs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.VS_CONTENT;
     var fs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.FS_CONTENT;
     this.renderer = ZeroGIS.renderer = new ZeroGIS.Object3D.WebGLRenderer(canvas, vs_content, fs_content);
-    this.scene = new XeroGIS.Object3D.Scene();
+    this.scene = new ZeroGIS.Object3D.Scene();
     var radio = canvas.width / canvas.height;
-    this.camera = new PerspectiveCamera(30, radio, 1.0, 20000000.0);
+    this.camera = new ZeroGIS.Object3D.PerspectiveCamera(30, radio, 1.0, 20000000.0);
     this.renderer.bindScene(this.scene);
     this.renderer.bindCamera(this.camera);
     this.setLevel(0);
@@ -78,7 +78,7 @@ ZeroGIS.Globe.prototype = {
     },
 
     setLevel: function (level) {
-        if (!Utils.isInteger(level)) {
+        if (!ZeroGIS.Utils.isInteger(level)) {
             throw "invalid level";
         }
         if (level < 0) {

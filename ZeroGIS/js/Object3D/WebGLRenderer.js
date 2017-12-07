@@ -122,7 +122,7 @@ ZeroGIS.Object3D.WebGLRenderer.prototype = {
     constructor: ZeroGIS.Object3D.WebGLRenderer,
 
     render: function (scene, camera) {
-        if (!(scene instanceof Scene)) {
+        if (!(scene instanceof ZeroGIS.Object3D.Scene)) {
             throw "invalid scene: not World.Scene";
         }
         if (!(camera instanceof PerspectiveCamera)) {
@@ -136,14 +136,14 @@ ZeroGIS.Object3D.WebGLRenderer.prototype = {
     },
 
     bindScene: function (scene) {
-        if (!(scene instanceof Scene)) {
+        if (!(scene instanceof ZeroGIS.Object3D.Scene)) {
             throw "invalid scene: not World.Scene";
         }
         this.scene = scene;
     },
 
     bindCamera: function (camera) {
-        if (!(camera instanceof PerspectiveCamera)) {
+        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
             throw "invalid camera: not World.PerspectiveCamera";
         }
         this.camera = camera;

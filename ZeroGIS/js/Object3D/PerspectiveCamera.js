@@ -6,30 +6,30 @@ ZeroGIS.Object3D.PerspectiveCamera = function (fov, aspect, near, far) {
     aspect = aspect !== undefined ? aspect : 1;
     near = near !== undefined ? near : 1;
     far = far !== undefined ? far : 1;
-    if (!Utils.isNumber(fov)) {
+    if (!ZeroGIS.Utils.isNumber(fov)) {
         throw "invalid fov: not number";
     }
-    if (!Utils.isNumber(aspect)) {
+    if (!ZeroGIS.Utils.isNumber(aspect)) {
         throw "invalid aspect: not number";
     }
-    if (!Utils.isNumber(near)) {
+    if (!ZeroGIS.Utils.isNumber(near)) {
         throw "invalid near: not number";
     }
-    if (!Utils.isNumber(far)) {
+    if (!ZeroGIS.Utils.isNumber(far)) {
         throw "invalid far: not number";
     }
     this.fov = fov;
     this.aspect = aspect;
     this.near = near;
     this.far = far;
-    Object3D.apply(this, null);
+    ZeroGIS.Object3D.apply(this, null);
     this.pitch = 90;
-    this.projMatrix = new Matrix();
+    this.projMatrix = new ZeroGIS.Matrix();
     this.setPerspectiveMatrix(this.fov, this.aspect, this.near, this.far);
 };
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype = new ZeroGIS.Object3D();
-ZeroGIS.Object3D.PerspectiveCamera.prototype.constructor = PerspectiveCamera;
+ZeroGIS.Object3D.PerspectiveCamera.prototype.constructor = ZeroGIS.Object3D.PerspectiveCamera;
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.Enum = {
     EARTH_FULL_OVERSPREAD_SCREEN: "EARTH_FULL_OVERSPREAD_SCREEN", //Canvas内全部被地球充满
@@ -41,16 +41,16 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.setPerspectiveMatrix = function (fo
     aspect = aspect !== undefined ? aspect : 1;
     near = near !== undefined ? near : 1;
     far = far !== undefined ? far : 1;
-    if (!Utils.isNumber(fov)) {
+    if (!ZeroGIS.Utils.isNumber(fov)) {
         throw "invalid fov: not number";
     }
-    if (!Utils.isNumber(aspect)) {
+    if (!ZeroGIS.Utils.isNumber(aspect)) {
         throw "invalid aspect: not number";
     }
-    if (!Utils.isNumber(near)) {
+    if (!ZeroGIS.Utils.isNumber(near)) {
         throw "invalid near: not number";
     }
-    if (!Utils.isNumber(far)) {
+    if (!ZeroGIS.Utils.isNumber(far)) {
         throw "invalid far: not number";
     }
     this.fov = fov;

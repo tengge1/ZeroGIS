@@ -2,8 +2,8 @@
 * 三维对象集合
 */
 ZeroGIS.Object3D.Object3DComponents = function () {
-    this.id = ++Kernel.idCounter;
-    this.matrix = new Matrix();
+    this.id = ++ZeroGIS.idCounter;
+    this.matrix = new ZeroGIS.Matrix();
     this.visible = true;
     this.parent = null;
     this.children = [];

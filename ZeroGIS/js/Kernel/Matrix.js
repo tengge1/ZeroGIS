@@ -21,7 +21,7 @@ ZeroGIS.Matrix.prototype = {
             throw "invalid arguments:arguments length error";
         }
         for (var i = 0; i < count; i++) {
-            if (!Utils.isNumber(arguments[i])) {
+            if (!ZeroGIS.Utils.isNumber(arguments[i])) {
                 throw "invalid arguments[" + i + "]";
             }
         }

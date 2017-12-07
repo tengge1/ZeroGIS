@@ -4,8 +4,8 @@
 * @constructor
 */
 ZeroGIS.Object3D = function (args) {
-    this.id = ++Kernel.idCounter;
-    this.matrix = new Matrix();
+    this.id = ++ZeroGIS.idCounter;
+    this.matrix = new ZeroGIS.Matrix();
     this.parent = null;
     this.vertices = [];
     this.vertexBuffer = null;
