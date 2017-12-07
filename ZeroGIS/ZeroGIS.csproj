@@ -72,7 +72,7 @@
     <Content Include="test.html" />
     <Content Include="js\Kernel\Elevation.js" />
     <Content Include="js\Kernel\Enum.js" />
-    <Content Include="js\Kernel\EventModule.js" />
+    <Content Include="js\Kernel\Event.js" />
     <Content Include="js\Kernel\Globe.js" />
     <Content Include="js\Kernel\Tile.js" />
     <Content Include="js\Kernel\TileGrid.js" />

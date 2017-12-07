@@ -17,7 +17,7 @@ ZeroGIS.Globe = function (canvas, args) {
     this.tiledLayer = null;
     var vs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.VS_CONTENT;
     var fs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.FS_CONTENT;
-    this.renderer = Kernel.renderer = new WebGLRenderer(canvas, vs_content, fs_content);
+    this.renderer = ZeroGIS.renderer = new ZeroGIS.Object3D.WebGLRenderer(canvas, vs_content, fs_content);
     this.scene = new Scene();
     var radio = canvas.width / canvas.height;
     this.camera = new PerspectiveCamera(30, radio, 1.0, 20000000.0);
@@ -25,7 +25,7 @@ ZeroGIS.Globe = function (canvas, args) {
     this.renderer.bindCamera(this.camera);
     this.setLevel(0);
     this.renderer.setIfAutoRefresh(true);
-    Event.initLayout();
+    ZeroGIS.Event.initLayout();
 };
 
 ZeroGIS.Globe.prototype = {

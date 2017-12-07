@@ -1,7 +1,7 @@
 ﻿/**
 * EventModule
 */
-ZeroGIS.EventModule = {
+ZeroGIS.Event = {
     canvas: null,
     bMouseDown: false,
     dragGeo: null,

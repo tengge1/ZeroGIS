@@ -2,17 +2,17 @@
     if (!(canvas instanceof HTMLCanvasElement)) {
         throw "invalid canvas: not HTMLCanvasElement";
     }
-    if (!(Utils.isString(vertexShaderText) && vertexShaderText !== "")) {
+    if (!(ZeroGIS.Utils.isString(vertexShaderText) && vertexShaderText !== "")) {
         throw "invalid vertexShaderText";
     }
-    if (!(Utils.isString(fragmentShaderText) && fragmentShaderText !== "")) {
+    if (!(ZeroGIS.Utils.isString(fragmentShaderText) && fragmentShaderText !== "")) {
         throw "invalid fragmentShaderText";
     }
     window.renderer = this; //之所以在此处设置window.renderer是因为要在tick函数中使用
     this.scene = null;
     this.camera = null;
     this.bAutoRefresh = false;
-    Event.bindEvents(canvas);
+    ZeroGIS.Event.bindEvents(canvas);
 
     function initWebGL(canvas) {
         try {
@@ -22,8 +22,8 @@
                     antialias: true
                 });
                 if (g) {
-                    window.gl = Kernel.gl = g;
-                    Kernel.canvas = canvas;
+                    window.gl = ZeroGIS.gl = g;
+                    ZeroGIS.canvas = canvas;
                     break;
                 }
             }
@@ -58,8 +58,8 @@
     }
 
     function initShaders(vertexShaderText, fragmentShaderText) {
-        var vertexShader = getShader(Kernel.gl, "VERTEX_SHADER", vertexShaderText);
-        var fragmentShader = getShader(Kernel.gl, "FRAGMENT_SHADER", fragmentShaderText);
+        var vertexShader = getShader(ZeroGIS.gl, "VERTEX_SHADER", vertexShaderText);
+        var fragmentShader = getShader(ZeroGIS.gl, "FRAGMENT_SHADER", fragmentShaderText);
 
         var shaderProgram = gl.createProgram();
         gl.attachShader(shaderProgram, vertexShader);
@@ -162,7 +162,7 @@ ZeroGIS.Object3D.WebGLRenderer.prototype = {
     },
 
     setIfAutoRefresh: function (bAuto) {
-        if (!Utils.isBool(bAuto)) {
+        if (!ZeroGIS.Utils.isBool(bAuto)) {
             throw "invalid bAuto: not bool";
         }
         this.bAutoRefresh = bAuto;
