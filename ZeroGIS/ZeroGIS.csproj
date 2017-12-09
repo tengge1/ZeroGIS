@@ -68,17 +68,17 @@
   <ItemGroup>
     <Content Include="dist\css\ZeroGIS.css" />
     <Content Include="dist\js\ZeroGIS.js" />
-    <Content Include="js\test.js" />
+    <Content Include="js\index.js" />
     <Content Include="old\css\ZeroGIS.css" />
-    <Content Include="test.html" />
-    <Content Include="js\Kernel\Elevation.js" />
-    <Content Include="js\Kernel\Enum.js" />
-    <Content Include="js\Kernel\Event.js" />
-    <Content Include="js\Kernel\Globe.js" />
+    <Content Include="index.html" />
+    <Content Include="js\Elevation.js" />
+    <Content Include="js\Enum.js" />
+    <Content Include="js\Event.js" />
+    <Content Include="js\Globe.js" />
     <Content Include="js\Object3D\Tile.js" />
     <Content Include="js\Object3D\TileGrid.js" />
-    <Content Include="js\Kernel\Utils.js" />
-    <Content Include="js\Kernel\Vector.js" />
+    <Content Include="js\Utils.js" />
+    <Content Include="js\Vector.js" />
     <Content Include="js\Object3D\Object3D.js" />
     <Content Include="js\Object3D\Line.js" />
     <Content Include="js\Object3D\Object3DComponents.js" />
@@ -89,7 +89,7 @@
     <Content Include="js\Object3D\ShaderContent.js" />
     <Content Include="js\Object3D\TextureMaterial.js" />
     <Content Include="js\Object3D\TileMaterial.js" />
-    <Content Include="js\Kernel\Vertice.js" />
+    <Content Include="js\Vertice.js" />
     <Content Include="js\Object3D\WebGLRenderer.js" />
     <Content Include="js\TiledLayer\ArcGISTiledLayer.js" />
     <Content Include="js\TiledLayer\AutonaviTiledLayer.js" />
@@ -102,9 +102,9 @@
     <Content Include="js\TiledLayer\SubTiledLayer.js" />
     <Content Include="js\TiledLayer\TiandituTiledLayer.js" />
     <Content Include="js\TiledLayer\TiledLayer.js" />
-    <Content Include="js\Kernel\Image.js" />
-    <Content Include="js\Kernel\MathUtils.js" />
-    <Content Include="js\Kernel\Matrix.js" />
+    <Content Include="js\Image.js" />
+    <Content Include="js\MathUtils.js" />
+    <Content Include="js\Matrix.js" />
     <Content Include="js\ZeroGIS.js" />
     <Content Include="Newtonsoft.Json.dll" />
     <Content Include="Newtonsoft.Json.xml" />
