@@ -1,14 +1,17 @@
-﻿ZeroGIS.Object3D.Vertice = function (x, y, z) {
+﻿/**
+* Vertice
+*/
+ZeroGIS.Vertice = function (x, y, z) {
     x = x !== undefined ? x : 0;
     y = y !== undefined ? y : 0;
     z = z !== undefined ? z : 0;
-    if (!Utils.isNumber(x)) {
+    if (!ZeroGIS.Utils.isNumber(x)) {
         throw "invalid x";
     }
-    if (!Utils.isNumber(y)) {
+    if (!ZeroGIS.Utils.isNumber(y)) {
         throw "invalid y";
     }
-    if (!Utils.isNumber(z)) {
+    if (!ZeroGIS.Utils.isNumber(z)) {
         throw "invalid z";
     }
     this.x = x;
@@ -16,38 +19,31 @@
     this.z = z;
 };
 
-ZeroGIS.Object3D.Vertice.prototype = {
-    constructor: ZeroGIS.Object3D.Vertice,
-
-    _requireVector: function () {
-        return require("world/Vector");
-    },
+ZeroGIS.Vertice.prototype = {
+    constructor: ZeroGIS.Vertice,
 
     minus: function (otherVertice) {
-        var Vector = this._requireVector();
-        if (!(otherVertice instanceof Vertice)) {
+        if (!(otherVertice instanceof ZeroGIS.Vertice)) {
             throw "invalid otherVertice";
         }
         var x = this.x - otherVertice.x;
         var y = this.y - otherVertice.y;
         var z = this.z - otherVertice.z;
-        return new Vector(x, y, z);
+        return new ZeroGIS.Vector(x, y, z);
     },
 
     plus: function (otherVector) {
-        var Vector = this._requireVector();
-        if (!(otherVector instanceof Vector)) {
+        if (!(otherVector instanceof ZeroGIS.Vector)) {
             throw "invalid otherVector";
         }
         var x = this.x + otherVector.x;
         var y = this.y + otherVector.y;
         var z = this.z + otherVector.z;
-        return new Vertice(x, y, z);
+        return new ZeroGIS.Vertice(x, y, z);
     },
 
     getVector: function () {
-        var Vector = this._requireVector();
-        return new Vector(this.x, this.y, this.z);
+        return new ZeroGIS.Vector(this.x, this.y, this.z);
     },
 
     getArray: function () {
@@ -55,10 +51,10 @@ ZeroGIS.Object3D.Vertice.prototype = {
     },
 
     getCopy: function () {
-        return new Vertice(this.x, this.y, this.z);
+        return new ZeroGIS.Vertice(this.x, this.y, this.z);
     },
 
     getOpposite: function () {
-        return new Vertice(-this.x, -this.y, -this.z);
+        return new ZeroGIS.Vertice(-this.x, -this.y, -this.z);
     }
 };

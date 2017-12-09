@@ -2,29 +2,29 @@
 * TiledLayer
 */
 ZeroGIS.TiledLayer = function (args) {
-    Object3DComponents.apply(this, arguments);
+    ZeroGIS.Object3D.Object3DComponents.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.prototype = new Object3DComponents();
-ZeroGIS.TiledLayer.prototype.constructor = TiledLayer;
+ZeroGIS.TiledLayer.prototype = new ZeroGIS.Object3D.Object3DComponents();
+ZeroGIS.TiledLayer.prototype.constructor = ZeroGIS.TiledLayer;
 
 ZeroGIS.TiledLayer.prototype.add = function (subTiledLayer) {
-    if (!(subTiledLayer instanceof SubTiledLayer)) {
+    if (!(subTiledLayer instanceof ZeroGIS.TiledLayer.SubTiledLayer)) {
         throw "invalid subTiledLayer: not World.SubTiledLayer";
     }
-    Object3DComponents.prototype.add.apply(this, arguments);
+    ZeroGIS.Object3D.Object3DComponents.prototype.add.apply(this, arguments);
     subTiledLayer.tiledLayer = this;
 };
 
 //根据切片的层级以及行列号获取图片的url,抽象方法，供子类实现
 ZeroGIS.TiledLayer.prototype.getImageUrl = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     return "";
@@ -32,7 +32,7 @@ ZeroGIS.TiledLayer.prototype.getImageUrl = function (level, row, column) {
 
 //根据传入的level更新SubTiledLayer的数量
 ZeroGIS.TiledLayer.prototype.updateSubLayerCount = function (level) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
     var subLayerCount = this.children.length;
@@ -44,7 +44,7 @@ ZeroGIS.TiledLayer.prototype.updateSubLayerCount = function (level) {
             var args = {
                 level: i + subLayerCount
             };
-            subLayer = new SubTiledLayer(args);
+            subLayer = new ZeroGIS.TiledLayer.SubTiledLayer(args);
             this.add(subLayer);
         }
     } else if (deltaLevel < 0) {

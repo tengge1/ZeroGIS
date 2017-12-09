@@ -11,11 +11,11 @@ ZeroGIS.Elevation = {
 
 //根据level获取包含level高程信息的ancestorElevationLevel
 ZeroGIS.Elevation.getAncestorElevationLevel = function (level) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    var a = Math.floor((level - 1 - Kernel.ELEVATION_LEVEL) / 3);
-    var ancestor = Kernel.ELEVATION_LEVEL + 3 * a;
+    var a = Math.floor((level - 1 - ZeroGIS.ELEVATION_LEVEL) / 3);
+    var ancestor = ZeroGIS.ELEVATION_LEVEL + 3 * a;
     return ancestor;
 };
 
@@ -24,13 +24,13 @@ ZeroGIS.Elevation.getAncestorElevationLevel = function (level) {
  * 也就是说如果传递的是一个正方形的extent，那么segment最大取99，此处设置的segment是80
  */
 ZeroGIS.Elevation.requestElevationsByTileGrid = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var segment = 80;
@@ -41,7 +41,7 @@ ZeroGIS.Elevation.requestElevationsByTileGrid = function (level, row, column) {
         return;
     }
     this.elevations[name] = null;
-    var Eproj = MathUtils.getTileWebMercatorEnvelopeByGrid(level, row, column);
+    var Eproj = ZeroGIS.MathUtils.getTileWebMercatorEnvelopeByGrid(level, row, column);
     var minX = Eproj.minX;
     var minY = Eproj.minY;
     var maxX = Eproj.maxX;
@@ -73,7 +73,7 @@ ZeroGIS.Elevation.requestElevationsByTileGrid = function (level, row, column) {
                 if (this.factor == 1) {
                     this.elevations[name] = result.data;
                 } else {
-                    this.elevations[name] = Utils.map(function (item) {
+                    this.elevations[name] = ZeroGIS.Utils.map(function (item) {
                         return item * this.factor;
                     }.bind(this));
                 }
@@ -91,13 +91,13 @@ ZeroGIS.Elevation.requestElevationsByTileGrid = function (level, row, column) {
 //无论怎样都尽量返回高程值，如果存在精确的高程，就获取精确高程；如果精确高程不存在，就返回上一个高程级别的估算高程
 //有可能
 ZeroGIS.Elevation.getElevation = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var result = null;
@@ -115,22 +115,22 @@ ZeroGIS.Elevation.getElevation = function (level, row, column) {
 //把>=8级的任意一个切片的tileGrid传进去，返回其高程值，该高程值是经过过滤了的，就是从大切片数据中抽吸出了其自身的高程信息
 //获取准确高程
 ZeroGIS.Elevation.getExactElevation = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var result = null;
     var elevationLevel = this.getAncestorElevationLevel(level);
-    var elevationTileGrid = MathUtils.getTileGridAncestor(elevationLevel, level, row, column);
+    var elevationTileGrid = ZeroGIS.MathUtils.getTileGridAncestor(elevationLevel, level, row, column);
     var elevationTileName = elevationTileGrid.level + "_" + elevationTileGrid.row + "_" + elevationTileGrid.column;
     var ancestorElevations = this.elevations[elevationTileName];
     if (ancestorElevations instanceof Array && ancestorElevations.length > 0) {
-        if (level > Kernel.ELEVATION_LEVEL) {
+        if (level > ZeroGIS.ELEVATION_LEVEL) {
             //ltTileGridLevel表示level级别下位于Tile7左上角的TileGrid
             var ltTileGridLevel = {
                 level: elevationTileGrid.level,
@@ -138,7 +138,7 @@ ZeroGIS.Elevation.getExactElevation = function (level, row, column) {
                 column: elevationTileGrid.column
             }; //与level在同级别下但是在Tile7左上角的那个TileGrid
             while (ltTileGridLevel.level != level) {
-                ltTileGridLevel = MathUtils.getTileGridByParent(ltTileGridLevel.level, ltTileGridLevel.row, ltTileGridLevel.column, MathUtils.LEFT_TOP);
+                ltTileGridLevel = ZeroGIS.MathUtils.getTileGridByParent(ltTileGridLevel.level, ltTileGridLevel.row, ltTileGridLevel.column, ZeroGIS.MathUtils.LEFT_TOP);
             }
             if (ltTileGridLevel.level == level) {
                 //bigRow表示在level等级下当前grid距离左上角的grid的行数
@@ -175,18 +175,18 @@ ZeroGIS.Elevation.getExactElevation = function (level, row, column) {
 //获取线性插值的高程，比如要找E12的估算高程，那么就先找到E10的精确高程，E10的精确高程是从E7中提取的
 //即E7(81*81)->E10(11*11)->插值计算E11、E12、E13
 ZeroGIS.Elevation.getLinearElevation = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var result = null;
     var elevationLevel = this.getAncestorElevationLevel(level);
-    var elevationTileGrid = MathUtils.getTileGridAncestor(elevationLevel, level, row, column);
+    var elevationTileGrid = ZeroGIS.MathUtils.getTileGridAncestor(elevationLevel, level, row, column);
     var exactAncestorElevations = this.getExactElevation(elevationTileGrid.level, elevationTileGrid.row, elevationTileGrid.column);
     var deltaLevel = level - elevationLevel;
     if (exactAncestorElevations) {
@@ -208,30 +208,30 @@ ZeroGIS.Elevation.getLinearElevation = function (level, row, column) {
 //从直接父节点的高程数据中获取不是很准确的高程数据，比如T11从E10的高程中(10+1)*(10+1)中获取不是很准确的高程
 //通过线性插值的方式获取高程，不精确
 ZeroGIS.Elevation.getLinearElevationFromParent = function (parentElevations, level, row, column) {
-    if (!(Utils.isArray(parentElevations) && parentElevations.length > 0)) {
+    if (!(ZeroGIS.Utils.isArray(parentElevations) && parentElevations.length > 0)) {
         throw "invalid parentElevations";
     }
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     //position为切片在直接父切片中的位置
-    var position = MathUtils.getTilePositionOfParent(level, row, column);
+    var position = ZeroGIS.MathUtils.getTilePositionOfParent(level, row, column);
     //先从parent中获取6个半行的数据
     var elevatios6_6 = [];
     var startIndex = 0;
-    if (position == MathUtils.LEFT_TOP) {
+    if (position == ZeroGIS.MathUtils.LEFT_TOP) {
         startIndex = 0;
-    } else if (position == MathUtils.RIGHT_TOP) {
+    } else if (position == ZeroGIS.MathUtils.RIGHT_TOP) {
         startIndex = 5;
-    } else if (position == MathUtils.LEFT_BOTTOM) {
+    } else if (position == ZeroGIS.MathUtils.LEFT_BOTTOM) {
         startIndex = 11 * 5;
-    } else if (position == MathUtils.RIGHT_BOTTOM) {
+    } else if (position == ZeroGIS.MathUtils.RIGHT_BOTTOM) {
         startIndex = 60;
     }
     var i, j, idx;
@@ -287,7 +287,7 @@ ZeroGIS.Elevation.getLinearElevationFromParent = function (parentElevations, lev
 //parent2Elevations是(10+1)*(10+1)的高程数据
 //level、row、column是子孙切片的信息
 ZeroGIS.Elevation.getLinearElevationFromParent2 = function (parent2Elevations, level, row, column) {
-    var parentTileGrid = MathUtils.getTileGridAncestor(level - 1, level, row, column);
+    var parentTileGrid = ZeroGIS.MathUtils.getTileGridAncestor(level - 1, level, row, column);
     var parentElevations = this.getLinearElevationFromParent(parent2Elevations, parentTileGrid.level, parentTileGrid.row, parentTileGrid.column);
     var elevations = this.getLinearElevationFromParent(parentElevations, level, row, column);
     return elevations;
@@ -297,7 +297,7 @@ ZeroGIS.Elevation.getLinearElevationFromParent2 = function (parent2Elevations, l
 //parent3Elevations是(10+1)*(10+1)的高程数据
 //level、row、column是重孙切片的信息
 ZeroGIS.Elevation.getLinearElevationFromParent3 = function (parent3Elevations, level, row, column) {
-    var parentTileGrid = MathUtils.getTileGridAncestor(level - 1, level, row, column);
+    var parentTileGrid = ZeroGIS.MathUtils.getTileGridAncestor(level - 1, level, row, column);
     var parentElevations = this.getLinearElevationFromParent2(parent3Elevations, parentTileGrid.level, parentTileGrid.row, parentTileGrid.column);
     var elevations = this.getLinearElevationFromParent(parentElevations, level, row, column);
     return elevations;

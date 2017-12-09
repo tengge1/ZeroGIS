@@ -60,7 +60,7 @@ ZeroGIS.Object3D.prototype = {
             }
 
             //使用纹理
-            if (this.material instanceof TextureMaterial) {
+            if (this.material instanceof ZeroGIS.Object3D.TextureMaterial) {
                 if (this.textureCoords.length > 0) { //提供了纹理坐标
                     if (!(gl.isBuffer(this.textureCoordBuffer))) {
                         this.textureCoordBuffer = gl.createBuffer();
@@ -78,7 +78,7 @@ ZeroGIS.Object3D.prototype = {
         // if (!(camera instanceof PerspectiveCamera)) {
         //   throw "invalid camera : not World.PerspectiveCamera";
         // }
-        camera.viewMatrix = (camera.viewMatrix instanceof Matrix) ? camera.viewMatrix : camera.getViewMatrix();
+        camera.viewMatrix = (camera.viewMatrix instanceof ZeroGIS.Matrix) ? camera.viewMatrix : camera.getViewMatrix();
         var mvMatrix = camera.viewMatrix.multiplyMatrix(this.matrix);
         gl.uniformMatrix4fv(gl.shaderProgram.uMVMatrix, false, mvMatrix.elements);
         gl.uniformMatrix4fv(gl.shaderProgram.uPMatrix, false, camera.projMatrix.elements);
@@ -89,7 +89,7 @@ ZeroGIS.Object3D.prototype = {
         //   throw "invalid camera : not World.PerspectiveCamera";
         // }
         if (this.visible) {
-            if (this.material instanceof TextureMaterial && this.material.loaded) {
+            if (this.material instanceof ZeroGIS.Object3D.TextureMaterial && this.material.loaded) {
                 gl.enableVertexAttribArray(gl.shaderProgram.aTextureCoord);
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
                 gl.vertexAttribPointer(gl.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
@@ -137,7 +137,7 @@ ZeroGIS.Object3D.prototype = {
     destroy: function () {
         this.parent = null;
         this.releaseBuffers();
-        if (this.material instanceof TextureMaterial) {
+        if (this.material instanceof ZeroGIS.Object3D.TextureMaterial) {
             this.material.releaseTexture();
             this.material = null;
         }

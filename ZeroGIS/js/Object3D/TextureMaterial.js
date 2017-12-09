@@ -23,7 +23,7 @@ ZeroGIS.Object3D.TextureMaterial.prototype.setImage = function (image) {
 };
 
 ZeroGIS.Object3D.TextureMaterial.prototype.setImageUrl = function (url) {
-    if (!Utils.isString(url)) {
+    if (!ZeroGIS.Utils.isString(url)) {
         throw "invalid url: not string";
     }
     this.image = new Image();

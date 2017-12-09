@@ -13,7 +13,7 @@ ZeroGIS.Object3D.Object3DComponents.prototype = {
     constructor: ZeroGIS.Object3D.Object3DComponents,
 
     add: function (obj) {
-        if (!(obj instanceof ZeroGIS.Object3D.Object3D || obj instanceof ZeroGIS.Object3D.Object3DComponents)) {
+        if (!(obj instanceof ZeroGIS.Object3D || obj instanceof ZeroGIS.Object3D.Object3DComponents)) {
             throw "invalid obj: not World.Object3D or Object3DComponents";
         }
 
@@ -69,7 +69,7 @@ ZeroGIS.Object3D.Object3DComponents.prototype = {
     },
 
     draw: function (camera) {
-        if (!(camera instanceof PerspectiveCamera)) {
+        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
             throw "invalid camera: not World.PerspectiveCamera";
         }
 

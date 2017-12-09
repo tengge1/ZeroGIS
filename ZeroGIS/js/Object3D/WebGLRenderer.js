@@ -125,10 +125,10 @@ ZeroGIS.Object3D.WebGLRenderer.prototype = {
         if (!(scene instanceof ZeroGIS.Object3D.Scene)) {
             throw "invalid scene: not World.Scene";
         }
-        if (!(camera instanceof PerspectiveCamera)) {
+        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
             throw "invalid camera: not World.PerspectiveCamera";
         }
-        gl.viewport(0, 0, Kernel.canvas.width, Kernel.canvas.height);
+        gl.viewport(0, 0, ZeroGIS.canvas.width, ZeroGIS.canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         camera.viewMatrix = null;
         camera.viewMatrix = camera.getViewMatrix();
@@ -150,13 +150,13 @@ ZeroGIS.Object3D.WebGLRenderer.prototype = {
     },
 
     tick: function () {
-        if (Kernel.renderer instanceof WebGLRenderer) {
-            if (Kernel.renderer.scene && Kernel.renderer.camera) {
-                Kernel.renderer.render(Kernel.renderer.scene, Kernel.renderer.camera);
+        if (ZeroGIS.renderer instanceof ZeroGIS.Object3D.WebGLRenderer) {
+            if (ZeroGIS.renderer.scene && ZeroGIS.renderer.camera) {
+                ZeroGIS.renderer.render(ZeroGIS.renderer.scene, ZeroGIS.renderer.camera);
             }
 
-            if (Kernel.renderer.bAutoRefresh) {
-                window.requestAnimationFrame(Kernel.renderer.tick);
+            if (ZeroGIS.renderer.bAutoRefresh) {
+                window.requestAnimationFrame(ZeroGIS.renderer.tick);
             }
         }
     },

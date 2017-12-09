@@ -32,13 +32,13 @@ ZeroGIS.Globe.prototype = {
     constructor: ZeroGIS.Globe,
 
     setTiledLayer: function (tiledLayer) {
-        if (!(tiledLayer instanceof TiledLayer)) {
+        if (!(tiledLayer instanceof ZeroGIS.TiledLayer)) {
             throw "invalid tiledLayer: not World.TiledLayer";
         }
 
         clearTimeout(this.idTimeOut);
         //在更换切片图层的类型时清空缓存的图片
-        Image1.clear();
+        ZeroGIS.Image1.clear();
         if (this.tiledLayer) {
             var b = this.scene.remove(this.tiledLayer);
             if (!b) {
@@ -49,17 +49,17 @@ ZeroGIS.Globe.prototype = {
         this.tiledLayer = tiledLayer;
         this.scene.add(this.tiledLayer);
         //添加第0级的子图层
-        var subLayer0 = new SubTiledLayer({
+        var subLayer0 = new ZeroGIS.TiledLayer.SubTiledLayer({
             level: 0
         });
         this.tiledLayer.add(subLayer0);
 
         //要对level为1的图层进行特殊处理，在创建level为1时就创建其中的全部的四个tile
-        var subLayer1 = new SubTiledLayer({
+        var subLayer1 = new ZeroGIS.TiledLayer.SubTiledLayer({
             level: 1
         });
         this.tiledLayer.add(subLayer1);
-        Kernel.canvas.style.cursor = "wait";
+        ZeroGIS.canvas.style.cursor = "wait";
         for (var m = 0; m <= 1; m++) {
             for (var n = 0; n <= 1; n++) {
                 var args = {
@@ -69,11 +69,11 @@ ZeroGIS.Globe.prototype = {
                     url: ""
                 };
                 args.url = this.tiledLayer.getImageUrl(args.level, args.row, args.column);
-                var tile = new Tile(args);
+                var tile = new ZeroGIS.Tile(args);
                 subLayer1.add(tile);
             }
         }
-        Kernel.canvas.style.cursor = "default";
+        ZeroGIS.canvas.style.cursor = "default";
         this.tick();
     },
 
@@ -86,7 +86,7 @@ ZeroGIS.Globe.prototype = {
         }
         level = level > this.MAX_LEVEL ? this.MAX_LEVEL : level; //超过最大的渲染级别就不渲染
         if (level != this.CURRENT_LEVEL) {
-            if (this.camera instanceof PerspectiveCamera) {
+            if (this.camera instanceof ZeroGIS.Object3D.PerspectiveCamera) {
                 //要先执行camera.setLevel,然后再刷新
                 this.camera.setLevel(level);
                 this.refresh();
@@ -118,7 +118,7 @@ ZeroGIS.Globe.prototype = {
     },
 
     tick: function () {
-        var globe = Kernel.globe;
+        var globe = ZeroGIS.globe;
         if (globe) {
             globe.refresh();
             this.idTimeOut = setTimeout(globe.tick, globe.REFRESH_INTERVAL);
@@ -144,10 +144,10 @@ ZeroGIS.Globe.prototype = {
         var i;
         for (i = level; i >= 2; i--) {
             levelsTileGrids.push(parentTileGrids); //此行代码表示第i层级的可见切片
-            parentTileGrids = Utils.map(parentTileGrids, function (item) {
+            parentTileGrids = ZeroGIS.Utils.map(parentTileGrids, function (item) {
                 return item.getParent();
             });
-            parentTileGrids = Utils.filterRepeatArray(parentTileGrids);
+            parentTileGrids = ZeroGIS.Utils.filterRepeatArray(parentTileGrids);
         }
         levelsTileGrids.reverse(); //2-level
         for (i = 2; i <= level; i++) {
@@ -156,7 +156,7 @@ ZeroGIS.Globe.prototype = {
             subLayer.updateTiles(levelsTileGrids[0], true);
             levelsTileGrids.splice(0, 1);
         }
-        if (Kernel.TERRAIN_ENABLED) {
+        if (ZeroGIS.TERRAIN_ENABLED) {
             this.requestElevationsAndCheckTerrain();
         }
     },
@@ -166,15 +166,15 @@ ZeroGIS.Globe.prototype = {
         var level = this.tiledLayer.children.length - 1;
         //当level>7时请求更新高程数据
         //请求的数据与第7级的切片大小相同
-        //if(level > Kernel.ELEVATION_LEVEL){
+        //if(level > ZeroGIS.ELEVATION_LEVEL){
 
         //达到TERRAIN_LEVEL级别时考虑三维请求
-        if (level >= Kernel.TERRAIN_LEVEL) {
-            for (var i = Kernel.ELEVATION_LEVEL + 1; i <= level; i++) {
+        if (level >= ZeroGIS.TERRAIN_LEVEL) {
+            for (var i = ZeroGIS.ELEVATION_LEVEL + 1; i <= level; i++) {
                 var subLayer = this.tiledLayer.children[i];
                 subLayer.requestElevations();
                 //检查SubTiledLayer下的子图层是否符合转换成TerrainTile的条件，如果适合就自动以三维地形图显示
-                if (i >= Kernel.TERRAIN_LEVEL) {
+                if (i >= ZeroGIS.TERRAIN_LEVEL) {
                     subLayer.checkTerrain();
                 }
             }

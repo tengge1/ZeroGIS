@@ -1,14 +1,17 @@
-﻿ZeroGIS.Vector = function (x, y, z) {
+﻿/**
+* Vector
+*/
+ZeroGIS.Vector = function (x, y, z) {
     x = x !== undefined ? x : 0;
     y = y !== undefined ? y : 0;
     z = z !== undefined ? z : 0;
-    if (!Utils.isNumber(x)) {
+    if (!ZeroGIS.Utils.isNumber(x)) {
         throw "invalid x";
     }
-    if (!Utils.isNumber(y)) {
+    if (!ZeroGIS.Utils.isNumber(y)) {
         throw "invalid y";
     }
-    if (!Utils.isNumber(z)) {
+    if (!ZeroGIS.Utils.isNumber(z)) {
         throw "invalid z";
     }
     this.x = x;
@@ -17,15 +20,10 @@
 };
 
 ZeroGIS.Vector.prototype = {
-    constructor: Vector,
-
-    _requireVertice: function () {
-        return require("world/Vertice");
-    },
+    constructor: ZeroGIS.Vector,
 
     getVertice: function () {
-        var Vertice = this._requireVertice();
-        return new Vertice(this.x, this.y, this.z);
+        return new ZeroGIS.Vertice(this.x, this.y, this.z);
     },
 
     getArray: function () {
@@ -33,11 +31,11 @@ ZeroGIS.Vector.prototype = {
     },
 
     getCopy: function () {
-        return new Vector(this.x, this.y, this.z);
+        return new ZeroGIS.Vector(this.x, this.y, this.z);
     },
 
     getOpposite: function () {
-        return new Vector(-this.x, -this.y, -this.z);
+        return new ZeroGIS.Vector(-this.x, -this.y, -this.z);
     },
 
     getLength: function () {
@@ -60,7 +58,7 @@ ZeroGIS.Vector.prototype = {
     },
 
     setLength: function (length) {
-        if (!Utils.isNumber(length)) {
+        if (!ZeroGIS.Utils.isNumber(length)) {
             throw "invalid length";
         }
         this.normalize();
@@ -78,7 +76,7 @@ ZeroGIS.Vector.prototype = {
         var result;
         var length = this.getLength();
         if (length === 0) {
-            result = new Vector(0, 0, 0);
+            result = new ZeroGIS.Vector(0, 0, 0);
         } else {
             var x2, y2, z2;
             if (this.x !== 0) {
@@ -94,7 +92,7 @@ ZeroGIS.Vector.prototype = {
                 y2 = 0;
                 z2 = -this.x / this.z;
             }
-            result = new Vector(x2, y2, z2);
+            result = new ZeroGIS.Vector(x2, y2, z2);
             result.normalize();
         }
         return result;
@@ -106,13 +104,13 @@ ZeroGIS.Vector.prototype = {
      * @return {World.Vector}
      */
     cross: function (other) {
-        if (!(other instanceof Vector)) {
+        if (!(other instanceof ZeroGIS.Vector)) {
             throw "invalid other";
         }
         var x = this.y * other.z - this.z * other.y;
         var y = this.z * other.x - this.x * other.z;
         var z = this.x * other.y - this.y * other.x;
-        return new Vector(x, y, z);
+        return new ZeroGIS.Vector(x, y, z);
     },
 
     /**
@@ -121,7 +119,7 @@ ZeroGIS.Vector.prototype = {
      * @return {*} 数字
      */
     dot: function (other) {
-        if (!(other instanceof Vector)) {
+        if (!(other instanceof ZeroGIS.Vector)) {
             throw "invalid other";
         }
         return this.x * other.x + this.y * other.y + this.z * other.z;

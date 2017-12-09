@@ -83,7 +83,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.setPerspectiveMatrix = function (fo
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getLightDirection = function () {
     var dirVertice = this.matrix.getColumnZ();
-    var direction = new Vector(-dirVertice.x, -dirVertice.y, -dirVertice.z);
+    var direction = new ZeroGIS.Vector(-dirVertice.x, -dirVertice.y, -dirVertice.z);
     direction.normalize();
     return direction;
 };
@@ -96,28 +96,28 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getProjViewMatrix = function () {
 };
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.setFov = function (fov) {
-    if (!Utils.isPositive(fov)) {
+    if (!ZeroGIS.Utils.isPositive(fov)) {
         throw "invalid fov";
     }
     this.setPerspectiveMatrix(fov, this.aspect, this.near, this.far);
 };
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.setAspect = function (aspect) {
-    if (!Utils.isPositive(aspect)) {
+    if (!ZeroGIS.Utils.isPositive(aspect)) {
         throw "invalid aspect";
     }
     this.setPerspectiveMatrix(this.fov, aspect, this.near, this.far);
 };
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.setNear = function (near) {
-    if (!Utils.isPositive(near)) {
+    if (!ZeroGIS.Utils.isPositive(near)) {
         throw "invalid near";
     }
     this.setPerspectiveMatrix(this.fov, this.aspect, near, this.far);
 };
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.setFar = function (far) {
-    if (!Utils.isPositive(far)) {
+    if (!ZeroGIS.Utils.isPositive(far)) {
         throw "invalid far";
     }
     this.setPerspectiveMatrix(this.fov, this.aspect, this.near, far);
@@ -129,14 +129,14 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getViewMatrix = function () {
 };
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.look = function (cameraPnt, targetPnt, upDirection) {
-    if (!(cameraPnt instanceof Vertice)) {
+    if (!(cameraPnt instanceof ZeroGIS.Vertice)) {
         throw "invalid cameraPnt: not Vertice";
     }
-    if (!(targetPnt instanceof Vertice)) {
+    if (!(targetPnt instanceof ZeroGIS.Vertice)) {
         throw "invalid targetPnt: not Vertice";
     }
-    upDirection = upDirection !== undefined ? upDirection : new Vector(0, 1, 0);
-    if (!(upDirection instanceof Vector)) {
+    upDirection = upDirection !== undefined ? upDirection : new ZeroGIS.Vector(0, 1, 0);
+    if (!(upDirection instanceof ZeroGIS.Vector)) {
         throw "invalid upDirection: not Vector";
     }
     var cameraPntCopy = cameraPnt.getCopy();
@@ -145,7 +145,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.look = function (cameraPnt, targetP
     var transX = cameraPntCopy.x;
     var transY = cameraPntCopy.y;
     var transZ = cameraPntCopy.z;
-    var zAxis = new Vector(cameraPntCopy.x - targetPntCopy.x, cameraPntCopy.y - targetPntCopy.y, cameraPntCopy.z - targetPntCopy.z).normalize();
+    var zAxis = new ZeroGIS.Vector(cameraPntCopy.x - targetPntCopy.x, cameraPntCopy.y - targetPntCopy.y, cameraPntCopy.z - targetPntCopy.z).normalize();
     var xAxis = up.cross(zAxis).normalize();
     var yAxis = zAxis.cross(xAxis).normalize();
 
@@ -163,11 +163,11 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.look = function (cameraPnt, targetP
 };
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.lookAt = function (targetPnt, upDirection) {
-    if (!(targetPnt instanceof Vertice)) {
+    if (!(targetPnt instanceof ZeroGIS.Vertice)) {
         throw "invalid targetPnt: not Vertice";
     }
-    upDirection = upDirection !== undefined ? upDirection : new Vector(0, 1, 0);
-    if (!(upDirection instanceof Vector)) {
+    upDirection = upDirection !== undefined ? upDirection : new ZeroGIS.Vector(0, 1, 0);
+    if (!(upDirection instanceof ZeroGIS.Vector)) {
         throw "invalid upDirection: not Vector";
     }
     var targetPntCopy = targetPnt.getCopy();
@@ -178,10 +178,10 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.lookAt = function (targetPnt, upDir
 
 //点变换: World->NDC
 ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromWorldToNDC = function (verticeInWorld, /*optional*/ projViewMatrix) {
-    if (!(verticeInWorld instanceof Vertice)) {
+    if (!(verticeInWorld instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInWorld: not Vertice";
     }
-    if (!(projViewMatrix instanceof Matrix)) {
+    if (!(projViewMatrix instanceof ZeroGIS.Matrix)) {
         projViewMatrix = this.getProjViewMatrix();
     }
     var columnWorld = [verticeInWorld.x, verticeInWorld.y, verticeInWorld.z, 1];
@@ -192,13 +192,13 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromWorldToNDC = func
     columnNDC[1] = columnProject[1] / w;
     columnNDC[2] = columnProject[2] / w;
     columnNDC[3] = 1;
-    var verticeInNDC = new Vertice(columnNDC[0], columnNDC[1], columnNDC[2]);
+    var verticeInNDC = new ZeroGIS.Vertice(columnNDC[0], columnNDC[1], columnNDC[2]);
     return verticeInNDC;
 };
 
 //点变换: NDC->World
 ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromNdcToWorld = function (verticeInNDC) {
-    if (!(verticeInNDC instanceof Vertice)) {
+    if (!(verticeInNDC instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInNDC: not Vertice";
     }
     var columnNDC = [verticeInNDC.x, verticeInNDC.y, verticeInNDC.z, 1]; //NDC归一化坐标
@@ -213,32 +213,32 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromNdcToWorld = func
     var viewMatrix = this.getViewMatrix();
     var inverseView = viewMatrix.getInverseMatrix(); //视点矩阵的逆矩阵
     var columnWorld = inverseView.multiplyColumn(columnCamera); //单击点的世界坐标
-    var verticeInWorld = new Vertice(columnWorld[0], columnWorld[1], columnWorld[2]);
+    var verticeInWorld = new ZeroGIS.Vertice(columnWorld[0], columnWorld[1], columnWorld[2]);
     return verticeInWorld;
 };
 
 //点变换: Camera->World
 ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromCameraToWorld = function (verticeInCamera, /*optional*/ viewMatrix) {
-    if (!(verticeInCamera instanceof Vertice)) {
+    if (!(verticeInCamera instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInCamera: not Vertice";
     }
-    if (!(viewMatrix instanceof Matrix)) {
+    if (!(viewMatrix instanceof ZeroGIS.Matrix)) {
         viewMatrix = this.getViewMatrix();
     }
     var verticeInCameraCopy = verticeInCamera.getCopy();
     var inverseMatrix = viewMatrix.getInverseMatrix();
     var column = [verticeInCameraCopy.x, verticeInCameraCopy.y, verticeInCameraCopy.z, 1];
     var column2 = inverseMatrix.multiplyColumn(column);
-    var verticeInWorld = new Vertice(column2[0], column2[1], column2[2]);
+    var verticeInWorld = new ZeroGIS.Vertice(column2[0], column2[1], column2[2]);
     return verticeInWorld;
 };
 
 //向量变换: Camera->World
 ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVectorFromCameraToWorld = function (vectorInCamera, /*optional*/ viewMatrix) {
-    if (!(vectorInCamera instanceof Vector)) {
+    if (!(vectorInCamera instanceof ZeroGIS.Vector)) {
         throw "invalid vectorInCamera: not Vector";
     }
-    if (!(viewMatrix instanceof Matrix)) {
+    if (!(viewMatrix instanceof ZeroGIS.Matrix)) {
         viewMatrix = this.getViewMatrix();
     }
     var vectorInCameraCopy = vectorInCamera.getCopy();
@@ -252,13 +252,13 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVectorFromCameraToWorld = fu
 
 //根据canvasX和canvasY获取拾取向量
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByCanvas = function (canvasX, canvasY) {
-    if (!Utils.isNumber(canvasX)) {
+    if (!ZeroGIS.Utils.isNumber(canvasX)) {
         throw "invalid canvasX: not number";
     }
-    if (!Utils.isNumber(canvasY)) {
+    if (!ZeroGIS.Utils.isNumber(canvasY)) {
         throw "invalid canvasY: not number";
     }
-    var ndcXY = MathUtils.convertPointFromCanvasToNDC(canvasX, canvasY);
+    var ndcXY = ZeroGIS.MathUtils.convertPointFromCanvasToNDC(canvasX, canvasY);
     var pickDirection = this.getPickDirectionByNDC(ndcXY[0], ndcXY[1]);
     return pickDirection;
 };
@@ -267,20 +267,20 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByCanvas = function
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getDirectionIntersectPointWithEarth = function () {
     var dir = this.getLightDirection();
     var p = this.getPosition();
-    var line = new Line(p, dir);
+    var line = new ZeroGIS.Object3D.Line(p, dir);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
 
 //根据ndcX和ndcY获取拾取向量
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByNDC = function (ndcX, ndcY) {
-    if (!Utils.isNumber(ndcX)) {
+    if (!ZeroGIS.Utils.isNumber(ndcX)) {
         throw "invalid ndcX: not number";
     }
-    if (!Utils.isNumber(ndcY)) {
+    if (!ZeroGIS.Utils.isNumber(ndcY)) {
         throw "invalid ndcY: not number";
     }
-    var verticeInNDC = new Vertice(ndcX, ndcY, 0.499);
+    var verticeInNDC = new ZeroGIS.Vertice(ndcX, ndcY, 0.499);
     var verticeInWorld = this.convertVerticeFromNdcToWorld(verticeInNDC);
     var cameraPositon = this.getPosition(); //摄像机的世界坐标
     var pickDirection = verticeInWorld.minus(cameraPositon);
@@ -290,12 +290,12 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByNDC = function (n
 
 //获取直线与地球的交点，该方法与World.Math.getLineIntersectPointWithEarth功能基本一样，只不过该方法对相交点进行了远近排序
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine = function (line) {
-    if (!(line instanceof Line)) {
+    if (!(line instanceof ZeroGIS.Object3D.Line)) {
         throw "invalid line: not Line";
     }
     var result = [];
     //pickVertice是笛卡尔空间直角坐标系中的坐标
-    var pickVertices = MathUtils.getLineIntersectPointWithEarth(line);
+    var pickVertices = ZeroGIS.MathUtils.getLineIntersectPointWithEarth(line);
     if (pickVertices.length === 0) {
         //没有交点
         result = [];
@@ -307,8 +307,8 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine 
         var pickVerticeA = pickVertices[0];
         var pickVerticeB = pickVertices[1];
         var cameraVertice = this.getPosition();
-        var lengthA = MathUtils.getLengthFromVerticeToVertice(cameraVertice, pickVerticeA);
-        var lengthB = MathUtils.getLengthFromVerticeToVertice(cameraVertice, pickVerticeB);
+        var lengthA = ZeroGIS.MathUtils.getLengthFromVerticeToVertice(cameraVertice, pickVerticeA);
+        var lengthB = ZeroGIS.MathUtils.getLengthFromVerticeToVertice(cameraVertice, pickVerticeB);
         //将距离人眼更近的那个点放到前面
         result = lengthA <= lengthB ? [pickVerticeA, pickVerticeB] : [pickVerticeB, pickVerticeA];
     }
@@ -317,29 +317,29 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine 
 
 //计算拾取射线与地球的交点，以笛卡尔空间直角坐标系坐标组的组的形式返回
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByCanvas = function (canvasX, canvasY, options) {
-    if (!Utils.isNumber(canvasX)) {
+    if (!ZeroGIS.Utils.isNumber(canvasX)) {
         throw "invalid canvasX: not number";
     }
-    if (!Utils.isNumber(canvasY)) {
+    if (!ZeroGIS.Utils.isNumber(canvasY)) {
         throw "invalid canvasY: not number";
     }
     var pickDirection = this.getPickDirectionByCanvas(canvasX, canvasY);
     var p = this.getPosition();
-    var line = new Line(p, pickDirection);
+    var line = new ZeroGIS.Object3D.Line(p, pickDirection);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
 
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByNDC = function (ndcX, ndcY) {
-    if (!Utils.isNumber(ndcX)) {
+    if (!ZeroGIS.Utils.isNumber(ndcX)) {
         throw "invalid ndcX: not number";
     }
-    if (!Utils.isNumber(ndcY)) {
+    if (!ZeroGIS.Utils.isNumber(ndcY)) {
         throw "invalid ndcY: not number";
     }
     var pickDirection = this.getPickDirectionByNDC(ndcX, ndcY);
     var p = this.getPosition();
-    var line = new Line(p, pickDirection);
+    var line = new ZeroGIS.Object3D.Line(p, pickDirection);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
@@ -348,13 +348,13 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByNDC =
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getPlanXOZ = function () {
     var position = this.getPosition();
     var direction = this.getLightDirection();
-    var plan = MathUtils.getCrossPlaneByLine(position, direction);
+    var plan = ZeroGIS.MathUtils.getCrossPlaneByLine(position, direction);
     return plan;
 };
 
 //设置观察到的层级
 ZeroGIS.Object3D.PerspectiveCamera.prototype.setLevel = function (level) {
-    if (!Utils.isInteger(level)) {
+    if (!ZeroGIS.Utils.isInteger(level)) {
         throw "invalid level";
     }
     if (level < 0) {
@@ -363,43 +363,43 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.setLevel = function (level) {
     var pOld = this.getPosition();
     if (pOld.x === 0 && pOld.y === 0 && pOld.z === 0) {
         //初始设置camera
-        var length = MathUtils.getLengthFromCamera2EarthSurface(level) + Kernel.EARTH_RADIUS; //level等级下摄像机应该到球心的距离
-        var origin = new Vertice(0, 0, 0);
+        var length = ZeroGIS.MathUtils.getLengthFromCamera2EarthSurface(level) + ZeroGIS.EARTH_RADIUS; //level等级下摄像机应该到球心的距离
+        var origin = new ZeroGIS.Vertice(0, 0, 0);
         var vector = this.getLightDirection().getOpposite();
         vector.setLength(length);
         var newPosition = vector.getVertice();
         this.look(newPosition, origin);
     } else {
-        var length2SurfaceNow = MathUtils.getLengthFromCamera2EarthSurface(Kernel.globe.CURRENT_LEVEL);
-        var length2Surface = MathUtils.getLengthFromCamera2EarthSurface(level);
+        var length2SurfaceNow = ZeroGIS.MathUtils.getLengthFromCamera2EarthSurface(ZeroGIS.globe.CURRENT_LEVEL);
+        var length2Surface = ZeroGIS.MathUtils.getLengthFromCamera2EarthSurface(level);
         var deltaLength = length2SurfaceNow - length2Surface;
         var dir = this.getLightDirection();
         dir.setLength(deltaLength);
         var pNew = pOld.plus(dir);
         this.setPosition(pNew.x, pNew.y, pNew.z);
     }
-    Kernel.globe.CURRENT_LEVEL = level;
+    ZeroGIS.globe.CURRENT_LEVEL = level;
 };
 
 //判断世界坐标系中的点是否在Canvas中可见
 //options:projView、verticeInNDC
 ZeroGIS.Object3D.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = function (verticeInWorld, options) {
-    if (!(verticeInWorld instanceof Vertice)) {
+    if (!(verticeInWorld instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInWorld: not Vertice";
     }
     options = options || {};
     var threshold = typeof options.threshold == "number" ? Math.abs(options.threshold) : 1;
     var cameraP = this.getPosition();
     var dir = verticeInWorld.minus(cameraP);
-    var line = new Line(cameraP, dir);
+    var line = new ZeroGIS.Object3D.Line(cameraP, dir);
     var pickResult = this.getPickCartesianCoordInEarthByLine(line);
     if (pickResult.length > 0) {
         var pickVertice = pickResult[0];
-        var length2Vertice = MathUtils.getLengthFromVerticeToVertice(cameraP, verticeInWorld);
-        var length2Pick = MathUtils.getLengthFromVerticeToVertice(cameraP, pickVertice);
+        var length2Vertice = ZeroGIS.MathUtils.getLengthFromVerticeToVertice(cameraP, verticeInWorld);
+        var length2Pick = ZeroGIS.MathUtils.getLengthFromVerticeToVertice(cameraP, pickVertice);
         if (length2Vertice < length2Pick + 5) {
-            if (!(options.verticeInNDC instanceof Vertice)) {
-                if (!(options.projView instanceof Matrix)) {
+            if (!(options.verticeInNDC instanceof ZeroGIS.Vertice)) {
+                if (!(options.projView instanceof ZeroGIS.Matrix)) {
                     options.projView = this.getProjViewMatrix();
                 }
                 options.verticeInNDC = this.convertVerticeFromWorldToNDC(verticeInWorld, options.projView);
@@ -414,7 +414,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = fun
 //判断地球表面的某个经纬度在Canvas中是否应该可见
 //options:projView、verticeInNDC
 ZeroGIS.Object3D.PerspectiveCamera.prototype.isGeoVisibleInCanvas = function (lon, lat, options) {
-    var verticeInWorld = MathUtils.geographicToCartesianCoord(lon, lat);
+    var verticeInWorld = ZeroGIS.MathUtils.geographicToCartesianCoord(lon, lat);
     var result = this.isWorldVerticeVisibleInCanvas(verticeInWorld, options);
     return result;
 };
@@ -429,12 +429,12 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.isGeoVisibleInCanvas = function (lo
 //获取level层级下的可见切片
 //options:projView
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (level, options) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
     var result = [];
     options = options || {};
-    if (!(options.projView instanceof Matrix)) {
+    if (!(options.projView instanceof ZeroGIS.Matrix)) {
         options.projView = this.getProjViewMatrix();
     }
     //向左、向右、向上、向下最大的循环次数
@@ -455,7 +455,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
 
     function handleRow(centerRow, centerColumn) {
         var result = [];
-        var grid = new TileGrid(level, centerRow, centerColumn); // {level:level,row:centerRow,column:centerColumn};
+        var grid = new ZeroGIS.TileGrid(level, centerRow, centerColumn); // {level:level,row:centerRow,column:centerColumn};
         var visibleInfo = this.getTileVisibleInfo(grid.level, grid.row, grid.column, options);
         var isRowCenterVisible = checkVisible(visibleInfo);
         if (isRowCenterVisible) {
@@ -468,7 +468,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
             var visible;
             while (leftLoopTime < LOOP_LIMIT) {
                 leftLoopTime++;
-                grid = MathUtils.getTileGridByBrother(level, centerRow, leftColumn, MathUtils.LEFT, mathOptions);
+                grid = ZeroGIS.MathUtils.getTileGridByBrother(level, centerRow, leftColumn, ZeroGIS.MathUtils.LEFT, mathOptions);
                 leftColumn = grid.column;
                 visibleInfo = this.getTileVisibleInfo(grid.level, grid.row, grid.column, options);
                 visible = checkVisible(visibleInfo);
@@ -485,7 +485,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
             var rightColumn = centerColumn;
             while (rightLoopTime < LOOP_LIMIT) {
                 rightLoopTime++;
-                grid = MathUtils.getTileGridByBrother(level, centerRow, rightColumn, MathUtils.RIGHT, mathOptions);
+                grid = ZeroGIS.MathUtils.getTileGridByBrother(level, centerRow, rightColumn, ZeroGIS.MathUtils.RIGHT, mathOptions);
                 rightColumn = grid.column;
                 visibleInfo = this.getTileVisibleInfo(grid.level, grid.row, grid.column, options);
                 visible = checkVisible(visibleInfo);
@@ -501,7 +501,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
     }
 
     var verticalCenterInfo = this._getVerticalVisibleCenterInfo(options);
-    var centerGrid = MathUtils.getTileGridByGeo(verticalCenterInfo.lon, verticalCenterInfo.lat, level);
+    var centerGrid = ZeroGIS.MathUtils.getTileGridByGeo(verticalCenterInfo.lon, verticalCenterInfo.lat, level);
     var handleRowThis = handleRow.bind(this);
 
     var rowResult = handleRowThis(centerGrid.row, centerGrid.column);
@@ -512,7 +512,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
     var bottomRow = centerGrid.row;
     while (bottomLoopTime < LOOP_LIMIT) {
         bottomLoopTime++;
-        grid = MathUtils.getTileGridByBrother(level, bottomRow, centerGrid.column, MathUtils.BOTTOM, mathOptions);
+        grid = ZeroGIS.MathUtils.getTileGridByBrother(level, bottomRow, centerGrid.column, ZeroGIS.MathUtils.BOTTOM, mathOptions);
         bottomRow = grid.row;
         rowResult = handleRowThis(grid.row, grid.column);
         if (rowResult.length > 0) {
@@ -528,7 +528,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
     var topRow = centerGrid.row;
     while (topLoopTime < LOOP_LIMIT) {
         topLoopTime++;
-        grid = MathUtils.getTileGridByBrother(level, topRow, centerGrid.column, MathUtils.TOP, mathOptions);
+        grid = ZeroGIS.MathUtils.getTileGridByBrother(level, topRow, centerGrid.column, ZeroGIS.MathUtils.TOP, mathOptions);
         topRow = grid.row;
         rowResult = handleRowThis(grid.row, grid.column);
         if (rowResult.length > 0) {
@@ -544,13 +544,13 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
 
 //options:projView
 ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (level, row, column, options) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     options = options || {};
@@ -591,10 +591,10 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (leve
         height: null,
         area: null
     };
-    if (!(options.projView instanceof Matrix)) {
+    if (!(options.projView instanceof ZeroGIS.Matrix)) {
         options.projView = this.getProjViewMatrix();
     }
-    result.Egeo = MathUtils.getTileGeographicEnvelopByGrid(level, row, column);
+    result.Egeo = ZeroGIS.MathUtils.getTileGeographicEnvelopByGrid(level, row, column);
     var tileMinLon = result.Egeo.minLon;
     var tileMaxLon = result.Egeo.maxLon;
     var tileMinLat = result.Egeo.minLat;
@@ -603,7 +603,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (leve
     //左下角
     result.lb.lon = tileMinLon;
     result.lb.lat = tileMinLat;
-    result.lb.verticeInWorld = MathUtils.geographicToCartesianCoord(result.lb.lon, result.lb.lat);
+    result.lb.verticeInWorld = ZeroGIS.MathUtils.geographicToCartesianCoord(result.lb.lon, result.lb.lat);
     result.lb.verticeInNDC = this.convertVerticeFromWorldToNDC(result.lb.verticeInWorld, options.projView);
     result.lb.visible = this.isWorldVerticeVisibleInCanvas(result.lb.verticeInWorld, {
         verticeInNDC: result.lb.verticeInNDC,
@@ -617,7 +617,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (leve
     //左上角
     result.lt.lon = tileMinLon;
     result.lt.lat = tileMaxLat;
-    result.lt.verticeInWorld = MathUtils.geographicToCartesianCoord(result.lt.lon, result.lt.lat);
+    result.lt.verticeInWorld = ZeroGIS.MathUtils.geographicToCartesianCoord(result.lt.lon, result.lt.lat);
     result.lt.verticeInNDC = this.convertVerticeFromWorldToNDC(result.lt.verticeInWorld, options.projView);
     result.lt.visible = this.isWorldVerticeVisibleInCanvas(result.lt.verticeInWorld, {
         verticeInNDC: result.lt.verticeInNDC,
@@ -631,7 +631,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (leve
     //右上角
     result.rt.lon = tileMaxLon;
     result.rt.lat = tileMaxLat;
-    result.rt.verticeInWorld = MathUtils.geographicToCartesianCoord(result.rt.lon, result.rt.lat);
+    result.rt.verticeInWorld = ZeroGIS.MathUtils.geographicToCartesianCoord(result.rt.lon, result.rt.lat);
     result.rt.verticeInNDC = this.convertVerticeFromWorldToNDC(result.rt.verticeInWorld, options.projView);
     result.rt.visible = this.isWorldVerticeVisibleInCanvas(result.rt.verticeInWorld, {
         verticeInNDC: result.rt.verticeInNDC,
@@ -645,7 +645,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (leve
     //右下角
     result.rb.lon = tileMaxLon;
     result.rb.lat = tileMinLat;
-    result.rb.verticeInWorld = MathUtils.geographicToCartesianCoord(result.rb.lon, result.rb.lat);
+    result.rb.verticeInWorld = ZeroGIS.MathUtils.geographicToCartesianCoord(result.rb.lon, result.rb.lat);
     result.rb.verticeInNDC = this.convertVerticeFromWorldToNDC(result.rb.verticeInWorld, options.projView);
     result.rb.visible = this.isWorldVerticeVisibleInCanvas(result.rb.verticeInWorld, {
         verticeInNDC: result.rb.verticeInNDC,
@@ -665,11 +665,11 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (leve
     var cross = vector03.cross(vector01);
     result.clockwise = cross.z > 0;
     //计算面积
-    var topWidth = Math.sqrt(Math.pow(ndcs[1].x - ndcs[2].x, 2) + Math.pow(ndcs[1].y - ndcs[2].y, 2)) * Kernel.canvas.width / 2;
-    var bottomWidth = Math.sqrt(Math.pow(ndcs[0].x - ndcs[3].x, 2) + Math.pow(ndcs[0].y - ndcs[3].y, 2)) * Kernel.canvas.width / 2;
+    var topWidth = Math.sqrt(Math.pow(ndcs[1].x - ndcs[2].x, 2) + Math.pow(ndcs[1].y - ndcs[2].y, 2)) * ZeroGIS.canvas.width / 2;
+    var bottomWidth = Math.sqrt(Math.pow(ndcs[0].x - ndcs[3].x, 2) + Math.pow(ndcs[0].y - ndcs[3].y, 2)) * ZeroGIS.canvas.width / 2;
     result.width = Math.floor((topWidth + bottomWidth) / 2);
-    var leftHeight = Math.sqrt(Math.pow(ndcs[0].x - ndcs[1].x, 2) + Math.pow(ndcs[0].y - ndcs[1].y, 2)) * Kernel.canvas.height / 2;
-    var rightHeight = Math.sqrt(Math.pow(ndcs[2].x - ndcs[3].x, 2) + Math.pow(ndcs[2].y - ndcs[3].y, 2)) * Kernel.canvas.height / 2;
+    var leftHeight = Math.sqrt(Math.pow(ndcs[0].x - ndcs[1].x, 2) + Math.pow(ndcs[0].y - ndcs[1].y, 2)) * ZeroGIS.canvas.height / 2;
+    var rightHeight = Math.sqrt(Math.pow(ndcs[2].x - ndcs[3].x, 2) + Math.pow(ndcs[2].y - ndcs[3].y, 2)) * ZeroGIS.canvas.height / 2;
     result.height = Math.floor((leftHeight + rightHeight) / 2);
     result.area = result.width * result.height;
 
@@ -718,7 +718,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype._getVerticalVisibleCenterInfo = fun
     }
     pickResults = this.getPickCartesianCoordInEarthByNDC(0, result.ndcY);
     result.pIntersect = pickResults[0];
-    var lonlat = MathUtils.cartesianCoordToGeographic(result.pIntersect);
+    var lonlat = ZeroGIS.MathUtils.cartesianCoordToGeographic(result.pIntersect);
     result.lon = lonlat[0];
     result.lat = lonlat[1];
     return result;

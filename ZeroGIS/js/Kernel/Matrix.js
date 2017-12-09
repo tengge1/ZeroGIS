@@ -46,13 +46,13 @@ ZeroGIS.Matrix.prototype = {
     },
 
     setColumnX: function (x, y, z) {
-        if (!Utils.isNumber(x)) {
+        if (!ZeroGIS.Utils.isNumber(x)) {
             throw "invalid x";
         }
-        if (!Utils.isNumber(y)) {
+        if (!ZeroGIS.Utils.isNumber(y)) {
             throw "invalid y";
         }
-        if (!Utils.isNumber(z)) {
+        if (!ZeroGIS.Utils.isNumber(z)) {
             throw "invalid z";
         }
         this.elements[0] = x;
@@ -61,17 +61,17 @@ ZeroGIS.Matrix.prototype = {
     },
 
     getColumnX: function () {
-        return new Vertice(this.elements[0], this.elements[1], this.elements[2]);
+        return new ZeroGIS.Vertice(this.elements[0], this.elements[1], this.elements[2]);
     },
 
     setColumnY: function (x, y, z) {
-        if (!Utils.isNumber(x)) {
+        if (!ZeroGIS.Utils.isNumber(x)) {
             throw "invalid x";
         }
-        if (!Utils.isNumber(y)) {
+        if (!ZeroGIS.Utils.isNumber(y)) {
             throw "invalid y";
         }
-        if (!Utils.isNumber(z)) {
+        if (!ZeroGIS.Utils.isNumber(z)) {
             throw "invalid z";
         }
         this.elements[4] = x;
@@ -80,17 +80,17 @@ ZeroGIS.Matrix.prototype = {
     },
 
     getColumnY: function () {
-        return new Vertice(this.elements[4], this.elements[5], this.elements[6]);
+        return new ZeroGIS.Vertice(this.elements[4], this.elements[5], this.elements[6]);
     },
 
     setColumnZ: function (x, y, z) {
-        if (!Utils.isNumber(x)) {
+        if (!ZeroGIS.Utils.isNumber(x)) {
             throw "invalid x";
         }
-        if (!Utils.isNumber(y)) {
+        if (!ZeroGIS.Utils.isNumber(y)) {
             throw "invalid y";
         }
-        if (!Utils.isNumber(z)) {
+        if (!ZeroGIS.Utils.isNumber(z)) {
             throw "invalid z";
         }
         this.elements[8] = x;
@@ -99,17 +99,17 @@ ZeroGIS.Matrix.prototype = {
     },
 
     getColumnZ: function () {
-        return new Vertice(this.elements[8], this.elements[9], this.elements[10]);
+        return new ZeroGIS.Vertice(this.elements[8], this.elements[9], this.elements[10]);
     },
 
     setColumnTrans: function (x, y, z) {
-        if (!Utils.isNumber(x)) {
+        if (!ZeroGIS.Utils.isNumber(x)) {
             throw "invalid x";
         }
-        if (!Utils.isNumber(y)) {
+        if (!ZeroGIS.Utils.isNumber(y)) {
             throw "invalid y";
         }
-        if (!Utils.isNumber(z)) {
+        if (!ZeroGIS.Utils.isNumber(z)) {
             throw "invalid z";
         }
         this.elements[12] = x;
@@ -118,7 +118,7 @@ ZeroGIS.Matrix.prototype = {
     },
 
     getColumnTrans: function () {
-        return new Vertice(this.elements[12], this.elements[13], this.elements[14]);
+        return new ZeroGIS.Vertice(this.elements[12], this.elements[13], this.elements[14]);
     },
 
     setLastRowDefault: function () {
@@ -136,7 +136,7 @@ ZeroGIS.Matrix.prototype = {
 
     //返回当前矩阵的转置矩阵,不对当前矩阵产生影响
     getTransposeMatrix: function () {
-        var result = new Matrix();
+        var result = new ZeroGIS.Matrix();
         result.elements[0] = this.elements[0];
         result.elements[4] = this.elements[1];
         result.elements[8] = this.elements[2];
@@ -168,7 +168,7 @@ ZeroGIS.Matrix.prototype = {
     //返回当前矩阵的逆矩阵，不对当前矩阵产生影响
     getInverseMatrix: function () {
         var a = this.elements;
-        var result = new Matrix();
+        var result = new ZeroGIS.Matrix();
         var b = result.elements;
         var c = a[0],
           d = a[1],
@@ -221,7 +221,7 @@ ZeroGIS.Matrix.prototype = {
     },
 
     setMatrixByOther: function (otherMatrix) {
-        if (!(otherMatrix instanceof Matrix)) {
+        if (!(otherMatrix instanceof ZeroGIS.Matrix)) {
             throw "invalid otherMatrix";
         }
         for (var i = 0; i < otherMatrix.elements.length; i++) {
@@ -262,14 +262,14 @@ ZeroGIS.Matrix.prototype = {
     },
 
     copy: function () {
-        return new Matrix(this.elements[0], this.elements[4], this.elements[8], this.elements[12],
+        return new ZeroGIS.Matrix(this.elements[0], this.elements[4], this.elements[8], this.elements[12],
           this.elements[1], this.elements[5], this.elements[9], this.elements[13],
           this.elements[2], this.elements[6], this.elements[10], this.elements[14],
           this.elements[3], this.elements[7], this.elements[11], this.elements[15]);
     },
 
     multiplyMatrix: function (otherMatrix) {
-        if (!(otherMatrix instanceof Matrix)) {
+        if (!(otherMatrix instanceof ZeroGIS.Matrix)) {
             throw "invalid otherMatrix";
         }
         var values1 = this.elements;
@@ -290,7 +290,7 @@ ZeroGIS.Matrix.prototype = {
         var m42 = values1[3] * values2[4] + values1[7] * values2[5] + values1[11] * values2[6] + values1[15] * values2[7];
         var m43 = values1[3] * values2[8] + values1[7] * values2[9] + values1[11] * values2[10] + values1[15] * values2[11];
         var m44 = values1[3] * values2[12] + values1[7] * values2[13] + values1[11] * values2[14] + values1[15] * values2[15];
-        return new Matrix(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
+        return new ZeroGIS.Matrix(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
     },
 
     /**
@@ -299,7 +299,7 @@ ZeroGIS.Matrix.prototype = {
      * @return {Matrix} 列向量，四元数组
      */
     multiplyColumn: function (c) {
-        var valid = Utils.isArray(c) && c.length == 4;
+        var valid = ZeroGIS.Utils.isArray(c) && c.length == 4;
         if (!valid) {
             throw "invalid c";
         }
@@ -313,7 +313,7 @@ ZeroGIS.Matrix.prototype = {
     },
 
     divide: function (a) {
-        if (!Utils.isNumber(a)) {
+        if (!ZeroGIS.Utils.isNumber(a)) {
             throw "invalid a:a is not number";
         }
         if (a === 0) {
@@ -327,13 +327,13 @@ ZeroGIS.Matrix.prototype = {
     },
 
     worldTranslate: function (x, y, z) {
-        if (!Utils.isNumber(x)) {
+        if (!ZeroGIS.Utils.isNumber(x)) {
             throw "invalid x";
         }
-        if (!Utils.isNumber(y)) {
+        if (!ZeroGIS.Utils.isNumber(y)) {
             throw "invalid y";
         }
-        if (!Utils.isNumber(z)) {
+        if (!ZeroGIS.Utils.isNumber(z)) {
             throw "invalid z";
         }
         this.elements[12] += x;
@@ -342,13 +342,13 @@ ZeroGIS.Matrix.prototype = {
     },
 
     localTranslate: function (x, y, z) {
-        if (!Utils.isNumber(x)) {
+        if (!ZeroGIS.Utils.isNumber(x)) {
             throw "invalid x";
         }
-        if (!Utils.isNumber(y)) {
+        if (!ZeroGIS.Utils.isNumber(y)) {
             throw "invalid y";
         }
-        if (!Utils.isNumber(z)) {
+        if (!ZeroGIS.Utils.isNumber(z)) {
             throw "invalid z";
         }
         var localColumn = [x, y, z, 1];
@@ -361,16 +361,16 @@ ZeroGIS.Matrix.prototype = {
         scaleX = (scaleX !== undefined) ? scaleX : 1;
         scaleY = (scaleY !== undefined) ? scaleY : 1;
         scaleZ = (scaleZ !== undefined) ? scaleZ : 1;
-        if (!Utils.isNumber(scaleX)) {
+        if (!ZeroGIS.Utils.isNumber(scaleX)) {
             throw "invalid x";
         }
-        if (!Utils.isNumber(scaleY)) {
+        if (!ZeroGIS.Utils.isNumber(scaleY)) {
             throw "invalid y";
         }
-        if (!Utils.isNumber(scaleZ)) {
+        if (!ZeroGIS.Utils.isNumber(scaleZ)) {
             throw "invalid z";
         }
-        var m = new Matrix(scaleX, 0, 0, 0,
+        var m = new ZeroGIS.Matrix(scaleX, 0, 0, 0,
           0, scaleY, 0, 0,
           0, 0, scaleZ, 0,
           0, 0, 0, 1);
@@ -386,12 +386,12 @@ ZeroGIS.Matrix.prototype = {
     },
 
     worldRotateX: function (radian) {
-        if (!Utils.isNumber(radian)) {
+        if (!ZeroGIS.Utils.isNumber(radian)) {
             throw "invalid radian";
         }
         var c = Math.cos(radian);
         var s = Math.sin(radian);
-        var m = new Matrix(1, 0, 0, 0,
+        var m = new ZeroGIS.Matrix(1, 0, 0, 0,
           0, c, -s, 0,
           0, s, c, 0,
           0, 0, 0, 1);
@@ -400,12 +400,12 @@ ZeroGIS.Matrix.prototype = {
     },
 
     worldRotateY: function (radian) {
-        if (!Utils.isNumber(radian)) {
+        if (!ZeroGIS.Utils.isNumber(radian)) {
             throw "invalid radian:not number";
         }
         var c = Math.cos(radian);
         var s = Math.sin(radian);
-        var m = new Matrix(c, 0, s, 0,
+        var m = new ZeroGIS.Matrix(c, 0, s, 0,
           0, 1, 0, 0, -s, 0, c, 0,
           0, 0, 0, 1);
         var result = m.multiplyMatrix(this);
@@ -413,12 +413,12 @@ ZeroGIS.Matrix.prototype = {
     },
 
     worldRotateZ: function (radian) {
-        if (!Utils.isNumber(radian)) {
+        if (!ZeroGIS.Utils.isNumber(radian)) {
             throw "invalid radian:not number";
         }
         var c = Math.cos(radian);
         var s = Math.sin(radian);
-        var m = new Matrix(c, -s, 0, 0,
+        var m = new ZeroGIS.Matrix(c, -s, 0, 0,
           s, c, 0, 0,
           0, 0, 1, 0,
           0, 0, 0, 1);
@@ -427,10 +427,10 @@ ZeroGIS.Matrix.prototype = {
     },
 
     worldRotateByVector: function (radian, vector) {
-        if (!Utils.isNumber(radian)) {
+        if (!ZeroGIS.Utils.isNumber(radian)) {
             throw "invalid radian:not number";
         }
-        if (!(vector instanceof Vector)) {
+        if (!(vector instanceof ZeroGIS.Vector)) {
             throw "invalid vector:not Vector";
         }
         var x = vector.x;
@@ -481,7 +481,7 @@ ZeroGIS.Matrix.prototype = {
         var m43 = 0.0; //M(3,2)
         var m44 = 1.0; //M(3,3)
 
-        var mat = new Matrix(m11, m12, m13, m14,
+        var mat = new ZeroGIS.Matrix(m11, m12, m13, m14,
           m21, m22, m23, m24,
           m31, m32, m33, m34,
           m41, m42, m43, m44);
@@ -490,7 +490,7 @@ ZeroGIS.Matrix.prototype = {
     },
 
     localRotateX: function (radian) {
-        if (!Utils.isNumber(radian)) {
+        if (!ZeroGIS.Utils.isNumber(radian)) {
             throw "invalid radian:not number";
         }
         var transVertice = this.getColumnTrans();
@@ -501,7 +501,7 @@ ZeroGIS.Matrix.prototype = {
     },
 
     localRotateY: function (radian) {
-        if (!Utils.isNumber(radian)) {
+        if (!ZeroGIS.Utils.isNumber(radian)) {
             throw "invalid radian:not number";
         }
         var transVertice = this.getColumnTrans();
@@ -512,7 +512,7 @@ ZeroGIS.Matrix.prototype = {
     },
 
     localRotateZ: function (radian) {
-        if (!Utils.isNumber(radian)) {
+        if (!ZeroGIS.Utils.isNumber(radian)) {
             throw "invalid radian:not number";
         }
         var transVertice = this.getColumnTrans();
@@ -524,16 +524,16 @@ ZeroGIS.Matrix.prototype = {
 
     //localVector指的是相对于模型坐标系中的向量
     localRotateByVector: function (radian, localVector) {
-        if (!Utils.isNumber(radian)) {
+        if (!ZeroGIS.Utils.isNumber(radian)) {
             throw "invalid radian: not number";
         }
-        if (!(localVector instanceof Vector)) {
+        if (!(localVector instanceof ZeroGIS.Vector)) {
             throw "invalid localVector: not Vector";
         }
         var localColumn = localVector.getArray();
         localColumn.push(1); //四元数组
         var worldColumn = this.multiplyColumn(localColumn); //模型坐标转换为世界坐标
-        var worldVector = new Vector(worldColumn[0], worldColumn[1], worldColumn[2]);
+        var worldVector = new ZeroGIS.Vector(worldColumn[0], worldColumn[1], worldColumn[2]);
 
         var transVertice = this.getColumnTrans();
         this.setColumnTrans(0, 0, 0);

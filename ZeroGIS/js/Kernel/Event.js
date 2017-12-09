@@ -1,5 +1,5 @@
 ﻿/**
-* EventModule
+* Event
 */
 ZeroGIS.Event = {
     canvas: null,
@@ -28,18 +28,18 @@ ZeroGIS.Event = {
         if (this.canvas instanceof HTMLCanvasElement) {
             this.canvas.width = document.body.clientWidth;
             this.canvas.height = document.body.clientHeight;
-            if (Kernel.globe) {
-                Kernel.globe.camera.setAspect(this.canvas.width / this.canvas.height);
-                Kernel.globe.refresh();
+            if (ZeroGIS.globe) {
+                ZeroGIS.globe.camera.setAspect(this.canvas.width / this.canvas.height);
+                ZeroGIS.globe.refresh();
             }
         }
     },
 
     //将地球表面的某一点移动到Canvas上
     moveLonLatToCanvas: function (lon, lat, canvasX, canvasY) {
-        var pickResult = Kernel.globe.camera.getPickCartesianCoordInEarthByCanvas(canvasX, canvasY);
+        var pickResult = ZeroGIS.globe.camera.getPickCartesianCoordInEarthByCanvas(canvasX, canvasY);
         if (pickResult.length > 0) {
-            var newLonLat = MathUtils.cartesianCoordToGeographic(pickResult[0]);
+            var newLonLat = ZeroGIS.MathUtils.cartesianCoordToGeographic(pickResult[0]);
             var newLon = newLonLat[0];
             var newLat = newLonLat[1];
             this.moveGeo(lon, lat, newLon, newLat);
@@ -47,9 +47,9 @@ ZeroGIS.Event = {
     },
 
     moveGeo: function (oldLon, oldLat, newLon, newLat) {
-        var camera = Kernel.globe.camera;
-        var deltaLonRadian = -MathUtils.degreeToRadian(newLon - oldLon); //旋转的经度
-        var deltaLatRadian = MathUtils.degreeToRadian(newLat - oldLat); //旋转的纬度
+        var camera = ZeroGIS.globe.camera;
+        var deltaLonRadian = -ZeroGIS.MathUtils.degreeToRadian(newLon - oldLon); //旋转的经度
+        var deltaLatRadian = ZeroGIS.MathUtils.degreeToRadian(newLat - oldLat); //旋转的纬度
         camera.worldRotateY(deltaLonRadian);
         var lightDir = camera.getLightDirection();
         var plumbVector = this.getPlumbVector(lightDir);
@@ -57,13 +57,13 @@ ZeroGIS.Event = {
     },
 
     onMouseDown: function (event) {
-        if (Kernel.globe) {
+        if (ZeroGIS.globe) {
             this.bMouseDown = true;
             this.previousX = event.layerX || event.offsetX;
             this.previousY = event.layerY || event.offsetY;
-            var pickResult = Kernel.globe.camera.getPickCartesianCoordInEarthByCanvas(this.previousX, this.previousY);
+            var pickResult = ZeroGIS.globe.camera.getPickCartesianCoordInEarthByCanvas(this.previousX, this.previousY);
             if (pickResult.length > 0) {
-                this.dragGeo = MathUtils.cartesianCoordToGeographic(pickResult[0]);
+                this.dragGeo = ZeroGIS.MathUtils.cartesianCoordToGeographic(pickResult[0]);
                 console.log("单击点三维坐标:(" + pickResult[0].x + "," + pickResult[0].y + "," + pickResult[0].z + ");经纬度坐标:[" + this.dragGeo[0] + "," + this.dragGeo[1] + "]");
             }
             this.canvas.addEventListener("mousemove", this.onMouseMoveListener, false);
@@ -71,7 +71,7 @@ ZeroGIS.Event = {
     },
 
     onMouseMove: function (event) {
-        var globe = Kernel.globe;
+        var globe = ZeroGIS.globe;
         if (globe && this.bMouseDown) {
             var currentX = event.layerX || event.offsetX;
             var currentY = event.layerY || event.offsetY;
@@ -81,11 +81,11 @@ ZeroGIS.Event = {
                 if (this.dragGeo) {
                     //鼠标拖动过程中要显示底图
                     //globe.showAllSubTiledLayerAndTiles();
-                    var newGeo = MathUtils.cartesianCoordToGeographic(pickResult[0]);
+                    var newGeo = ZeroGIS.MathUtils.cartesianCoordToGeographic(pickResult[0]);
                     this.moveGeo(this.dragGeo[0], this.dragGeo[1], newGeo[0], newGeo[1]);
                 } else {
                     //进入地球内部
-                    this.dragGeo = MathUtils.cartesianCoordToGeographic(pickResult[0]);
+                    this.dragGeo = ZeroGIS.MathUtils.cartesianCoordToGeographic(pickResult[0]);
                 }
                 this.previousX = currentX;
                 this.previousY = currentY;
@@ -112,7 +112,7 @@ ZeroGIS.Event = {
     },
 
     onDbClick: function (event) {
-        var globe = Kernel.globe;
+        var globe = ZeroGIS.globe;
         if (globe) {
             var absoluteX = event.layerX || event.offsetX;
             var absoluteY = event.layerY || event.offsetY;
@@ -120,7 +120,7 @@ ZeroGIS.Event = {
             globe.setLevel(globe.CURRENT_LEVEL + 1);
             if (pickResult.length >= 1) {
                 var pickVertice = pickResult[0];
-                var lonlat = MathUtils.cartesianCoordToGeographic(pickVertice);
+                var lonlat = ZeroGIS.MathUtils.cartesianCoordToGeographic(pickVertice);
                 var lon = lonlat[0];
                 var lat = lonlat[1];
                 globe.setLevel(globe.CURRENT_LEVEL + 1);
@@ -130,7 +130,7 @@ ZeroGIS.Event = {
     },
 
     onMouseWheel: function (event) {
-        var globe = Kernel.globe;
+        var globe = ZeroGIS.globe;
         if (!globe) {
             return;
         }
@@ -151,7 +151,7 @@ ZeroGIS.Event = {
     },
 
     onKeyDown: function (event) {
-        var globe = Kernel.globe;
+        var globe = ZeroGIS.globe;
         if (!globe) {
             return;
         }
@@ -177,10 +177,10 @@ ZeroGIS.Event = {
             if (pickResult.length > 0) {
                 var pIntersect = pickResult[0];
                 var pCamera = camera.getPosition();
-                var legnth2Intersect = MathUtils.getLengthFromVerticeToVertice(pCamera, pIntersect);
+                var legnth2Intersect = ZeroGIS.MathUtils.getLengthFromVerticeToVertice(pCamera, pIntersect);
                 var mat = camera.matrix.copy();
                 mat.setColumnTrans(pIntersect.x, pIntersect.y, pIntersect.z);
-                var DELTA_RADIAN = MathUtils.degreeToRadian(DELTA_PITCH);
+                var DELTA_RADIAN = ZeroGIS.MathUtils.degreeToRadian(DELTA_PITCH);
                 mat.localRotateX(DELTA_RADIAN);
                 var dirZ = mat.getColumnZ().getVector();
                 dirZ.setLength(legnth2Intersect);
@@ -195,13 +195,13 @@ ZeroGIS.Event = {
     },
 
     getPlumbVector: function (direction) {
-        if (!(direction instanceof Vector)) {
+        if (!(direction instanceof ZeroGIS.Vector)) {
             throw "invalid direction: not World.Vector";
         }
         var dir = direction.getCopy();
         dir.y = 0;
         dir.normalize();
-        var plumbVector = new Vector(-dir.z, 0, dir.x);
+        var plumbVector = new ZeroGIS.Vector(-dir.z, 0, dir.x);
         plumbVector.normalize();
         return plumbVector;
     }

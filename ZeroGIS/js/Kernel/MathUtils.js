@@ -50,10 +50,10 @@ ZeroGIS.MathUtils.numerationSystemTo10 = function (numSys, strNum) {
  * @returns {string} 字符串形式的其他进制的数据
  */
 ZeroGIS.MathUtils.numerationSystemFrom10 = function (numSys, num) {
-    if (!Utils.isPositiveInteger(numSys)) {
+    if (!ZeroGIS.Utils.isPositiveInteger(numSys)) {
         throw "invalid numSys";
     }
-    if (!Utils.isInteger(num)) {
+    if (!ZeroGIS.Utils.isInteger(num)) {
         throw "invalid num";
     }
     var tempResultArray = [];
@@ -79,13 +79,13 @@ ZeroGIS.MathUtils.numerationSystemFrom10 = function (numSys, num) {
  * @returns {string}
  */
 ZeroGIS.MathUtils.numerationSystemChange = function (numSysFrom, numSysTo, strNumFrom) {
-    if (!Utils.isPositiveInteger(numSysFrom)) {
+    if (!ZeroGIS.Utils.isPositiveInteger(numSysFrom)) {
         throw "invalid numSysFrom";
     }
-    if (!Utils.isPositiveInteger(numSysTo)) {
+    if (!ZeroGIS.Utils.isPositiveInteger(numSysTo)) {
         throw "invalid numSysTo";
     }
-    if (!Utils.isString(strNumFrom)) {
+    if (!ZeroGIS.Utils.isString(strNumFrom)) {
         throw "invalid strNumFrom";
     }
     var temp10 = this.numerationSystemTo10(numSysFrom, strNumFrom);
@@ -97,20 +97,20 @@ ZeroGIS.MathUtils.numerationSystemChange = function (numSysFrom, numSysTo, strNu
  * 计算三角形的面积
  */
 ZeroGIS.MathUtils.getTriangleArea = function (v1, v2, v3) {
-    if (!(v1 instanceof Vertice)) {
+    if (!(v1 instanceof ZeroGIS.Vertice)) {
         throw "invalid v1";
     }
-    if (!(v2 instanceof Vertice)) {
+    if (!(v2 instanceof ZeroGIS.Vertice)) {
         throw "invalid v2";
     }
-    if (!(v3 instanceof Vertice)) {
+    if (!(v3 instanceof ZeroGIS.Vertice)) {
         throw "invalid v3";
     }
     var v1Copy = v1.getCopy();
     var v2Copy = v2.getCopy();
     var v3Copy = v3.getCopy();
     var direction = v3Copy.minus(v2Copy);
-    var line = new Line(v2Copy, direction);
+    var line = new ZeroGIS.Object3D.Line(v2Copy, direction);
     var h = this.getLengthFromVerticeToLine(v1Copy, line);
     var w = this.getLengthFromVerticeToVertice(v2Copy, v3Copy);
     var area = 0.5 * w * h;
@@ -124,10 +124,10 @@ ZeroGIS.MathUtils.getTriangleArea = function (v1, v2, v3) {
  * @return {Number}
  */
 ZeroGIS.MathUtils.getLengthFromVerticeToVertice = function (vertice1, vertice2) {
-    if (!(vertice1 instanceof Vertice)) {
+    if (!(vertice1 instanceof ZeroGIS.Vertice)) {
         throw "invalid vertice1";
     }
-    if (!(vertice2 instanceof Vertice)) {
+    if (!(vertice2 instanceof ZeroGIS.Vertice)) {
         throw "invalid vertice2";
     }
     var vertice1Copy = vertice1.getCopy();
@@ -208,7 +208,7 @@ ZeroGIS.MathUtils.getLengthFromVerticeToPlan = function (vertice, plan) {
  * @return {Vertice}
  */
 ZeroGIS.MathUtils.getVerticeVerticalIntersectPointWidthPlan = function (vertice, plan) {
-    if (!(vertice instanceof Vertice)) {
+    if (!(vertice instanceof ZeroGIS.Vertice)) {
         throw "invalid vertice";
     }
     if (!(plan instanceof Plan)) {
@@ -219,7 +219,7 @@ ZeroGIS.MathUtils.getVerticeVerticalIntersectPointWidthPlan = function (vertice,
     var x0 = verticeCopy.x;
     var y0 = verticeCopy.y;
     var z0 = verticeCopy.z;
-    var normalVector = new Vector(planCopy.A, planCopy.B, planCopy.C);
+    var normalVector = new ZeroGIS.Vector(planCopy.A, planCopy.B, planCopy.C);
     normalVector.normalize();
     var a = normalVector.x;
     var b = normalVector.y;
@@ -229,15 +229,15 @@ ZeroGIS.MathUtils.getVerticeVerticalIntersectPointWidthPlan = function (vertice,
     var x = k * a + x0;
     var y = k * b + y0;
     var z = k * c + z0;
-    var intersectVertice = new Vertice(x, y, z);
+    var intersectVertice = new ZeroGIS.Vertice(x, y, z);
     return intersectVertice;
 };
 
 ZeroGIS.MathUtils.getIntersectPointByLineAdPlan = function (line, plan) {
-    if (!(line instanceof Line)) {
+    if (!(line instanceof ZeroGIS.Object3D.Line)) {
         throw "invalid line";
     }
-    if (!(plan instanceof Plan)) {
+    if (!(plan instanceof ZeroGIS.Object3D.Plan)) {
         throw "invalid plan";
     }
     var lineCopy = line.getCopy();
@@ -257,7 +257,7 @@ ZeroGIS.MathUtils.getIntersectPointByLineAdPlan = function (line, plan) {
     var x = k * a + x0;
     var y = k * b + y0;
     var z = k * c + z0;
-    var intersectVertice = new Vertice(x, y, z);
+    var intersectVertice = new ZeroGIS.Vertice(x, y, z);
     return intersectVertice;
 };
 
@@ -268,7 +268,7 @@ ZeroGIS.MathUtils.getIntersectPointByLineAdPlan = function (line, plan) {
  * @return {Array}
  */
 ZeroGIS.MathUtils.getLineIntersectPointWithEarth = function (line) {
-    if (!(line instanceof Line)) {
+    if (!(line instanceof ZeroGIS.Object3D.Line)) {
         throw "invalid line";
     }
     var result = [];
@@ -276,7 +276,7 @@ ZeroGIS.MathUtils.getLineIntersectPointWithEarth = function (line) {
     var vertice = lineCopy.vertice;
     var direction = lineCopy.vector;
     direction.normalize();
-    var r = Kernel.EARTH_RADIUS;
+    var r = ZeroGIS.EARTH_RADIUS;
     var a = direction.x;
     var b = direction.y;
     var c = direction.z;
@@ -307,7 +307,7 @@ ZeroGIS.MathUtils.getLineIntersectPointWithEarth = function (line) {
             var x = k * a + x0;
             var y = k * b + y0;
             var z = k * c + z0;
-            var p = new Vertice(x, y, z);
+            var p = new ZeroGIS.Vertice(x, y, z);
             result.push(p);
         } else if (delta > 0) {
             var sqrtDelta = Math.sqrt(delta);
@@ -315,14 +315,14 @@ ZeroGIS.MathUtils.getLineIntersectPointWithEarth = function (line) {
             var x1 = k1 * a + x0;
             var y1 = k1 * b + y0;
             var z1 = k1 * c + z0;
-            var p1 = new Vertice(x1, y1, z1);
+            var p1 = new ZeroGIS.Vertice(x1, y1, z1);
             result.push(p1);
 
             var k2 = (-2 * t - sqrtDelta) / (2 * A);
             var x2 = k2 * a + x0;
             var y2 = k2 * b + y0;
             var z2 = k2 * c + z0;
-            var p2 = new Vertice(x2, y2, z2);
+            var p2 = new ZeroGIS.Vertice(x2, y2, z2);
             result.push(p2);
         }
     }
@@ -337,10 +337,10 @@ ZeroGIS.MathUtils.getLineIntersectPointWithEarth = function (line) {
  * @return {Object} Plan 返回平面表达式中Ax+By+Cz+D=0的A、B、C、D的信息
  */
 ZeroGIS.MathUtils.getCrossPlaneByLine = function (vertice, direction) {
-    if (!(vertice instanceof Vertice)) {
+    if (!(vertice instanceof ZeroGIS.Vertice)) {
         throw "invalid vertice";
     }
-    if (!(direction instanceof Vector)) {
+    if (!(direction instanceof ZeroGIS.Vector)) {
         throw "invalid direction";
     }
     var verticeCopy = vertice.getCopy();
@@ -360,27 +360,27 @@ ZeroGIS.MathUtils.getCrossPlaneByLine = function (vertice, direction) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 //点变换: Canvas->NDC
 ZeroGIS.MathUtils.convertPointFromCanvasToNDC = function (canvasX, canvasY) {
-    if (!(Utils.isNumber(canvasX))) {
+    if (!(ZeroGIS.Utils.isNumber(canvasX))) {
         throw "invalid canvasX";
     }
-    if (!(Utils.isNumber(canvasY))) {
+    if (!(ZeroGIS.Utils.isNumber(canvasY))) {
         throw "invalid canvasY";
     }
-    var ndcX = 2 * canvasX / Kernel.canvas.width - 1;
-    var ndcY = 1 - 2 * canvasY / Kernel.canvas.height;
+    var ndcX = 2 * canvasX / ZeroGIS.canvas.width - 1;
+    var ndcY = 1 - 2 * canvasY / ZeroGIS.canvas.height;
     return [ndcX, ndcY];
 };
 
 //点变换: NDC->Canvas
 ZeroGIS.MathUtils.convertPointFromNdcToCanvas = function (ndcX, ndcY) {
-    if (!(Utils.isNumber(ndcX))) {
+    if (!(ZeroGIS.Utils.isNumber(ndcX))) {
         throw "invalid ndcX";
     }
-    if (!(Utils.isNumber(ndcY))) {
+    if (!(ZeroGIS.Utils.isNumber(ndcY))) {
         throw "invalid ndcY";
     }
-    var canvasX = (1 + ndcX) * Kernel.canvas.width / 2.0;
-    var canvasY = (1 - ndcY) * Kernel.canvas.height / 2.0;
+    var canvasX = (1 + ndcX) * ZeroGIS.canvas.width / 2.0;
+    var canvasY = (1 - ndcY) * ZeroGIS.canvas.height / 2.0;
     return [canvasX, canvasY];
 };
 
@@ -390,7 +390,7 @@ ZeroGIS.MathUtils.convertPointFromNdcToCanvas = function (ndcX, ndcY) {
  * @return {*}
  */
 ZeroGIS.MathUtils.getLengthFromCamera2EarthSurface = function (level) {
-    if (!(Utils.isNonNegativeInteger(level))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(level))) {
         throw "invalid level";
     }
     return 7820683 / Math.pow(2, level);
@@ -403,13 +403,13 @@ ZeroGIS.MathUtils.getLengthFromCamera2EarthSurface = function (level) {
  * @p 笛卡尔坐标系中的坐标
  */
 ZeroGIS.MathUtils.geographicToCartesianCoord = function (lon, lat, r) {
-    if (!(Utils.isNumber(lon) && lon >= -(180 + 0.001) && lon <= (180 + 0.001))) {
+    if (!(ZeroGIS.Utils.isNumber(lon) && lon >= -(180 + 0.001) && lon <= (180 + 0.001))) {
         throw "invalid lon";
     }
-    if (!(Utils.isNumber(lat) && lat >= -(90 + 0.001) && lat <= (90 + 0.001))) {
+    if (!(ZeroGIS.Utils.isNumber(lat) && lat >= -(90 + 0.001) && lat <= (90 + 0.001))) {
         throw "invalid lat";
     }
-    r = r || Kernel.EARTH_RADIUS;
+    r = r || ZeroGIS.EARTH_RADIUS;
     var radianLon = this.degreeToRadian(lon);
     var radianLat = this.degreeToRadian(lat);
     var sin1 = Math.sin(radianLon);
@@ -419,7 +419,7 @@ ZeroGIS.MathUtils.geographicToCartesianCoord = function (lon, lat, r) {
     var x = r * sin1 * cos2;
     var y = r * sin2;
     var z = r * cos1 * cos2;
-    return new Vertice(x, y, z);
+    return new ZeroGIS.Vertice(x, y, z);
 };
 
 /**
@@ -428,14 +428,14 @@ ZeroGIS.MathUtils.geographicToCartesianCoord = function (lon, lat, r) {
  * @return {Array}
  */
 ZeroGIS.MathUtils.cartesianCoordToGeographic = function (vertice) {
-    if (!(vertice instanceof Vertice)) {
+    if (!(vertice instanceof ZeroGIS.Vertice)) {
         throw "invalid vertice";
     }
     var verticeCopy = vertice.getCopy();
     var x = verticeCopy.x;
     var y = verticeCopy.y;
     var z = verticeCopy.z;
-    var sin2 = y / Kernel.EARTH_RADIUS;
+    var sin2 = y / ZeroGIS.EARTH_RADIUS;
     if (sin2 > 1) {
         sin2 = 2;
     } else if (sin2 < -1) {
@@ -443,13 +443,13 @@ ZeroGIS.MathUtils.cartesianCoordToGeographic = function (vertice) {
     }
     var radianLat = Math.asin(sin2);
     var cos2 = Math.cos(radianLat);
-    var sin1 = x / (Kernel.EARTH_RADIUS * cos2);
+    var sin1 = x / (ZeroGIS.EARTH_RADIUS * cos2);
     if (sin1 > 1) {
         sin1 = 1;
     } else if (sin1 < -1) {
         sin1 = -1;
     }
-    var cos1 = z / (Kernel.EARTH_RADIUS * cos2);
+    var cos1 = z / (ZeroGIS.EARTH_RADIUS * cos2);
     if (cos1 > 1) {
         cos1 = 1;
     } else if (cos1 < -1) {
@@ -469,8 +469,8 @@ ZeroGIS.MathUtils.cartesianCoordToGeographic = function (vertice) {
             radianLog = -radianLog - Math.PI;
         }
     }
-    var degreeLat = MathUtils.radianToDegree(radianLat);
-    var degreeLog = MathUtils.radianToDegree(radianLog);
+    var degreeLat = ZeroGIS.MathUtils.radianToDegree(radianLat);
+    var degreeLog = ZeroGIS.MathUtils.radianToDegree(radianLog);
     return [degreeLog, degreeLat];
 };
 
@@ -483,13 +483,13 @@ ZeroGIS.MathUtils.cartesianCoordToGeographic = function (vertice) {
  * @return {Object}
  */
 ZeroGIS.MathUtils.getTileGridByParent = function (parentLevel, parentRow, parentColumn, position) {
-    if (!Utils.isNonNegativeInteger(parentLevel)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(parentLevel)) {
         throw "invalid parentLevel";
     }
-    if (!Utils.isNonNegativeInteger(parentRow)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(parentRow)) {
         throw "invalid parentRow";
     }
-    if (!Utils.isNonNegativeInteger(parentColumn)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(parentColumn)) {
         throw "invalid parentColumn";
     }
     var level = parentLevel + 1;
@@ -510,18 +510,18 @@ ZeroGIS.MathUtils.getTileGridByParent = function (parentLevel, parentRow, parent
     } else {
         throw "invalid position";
     }
-    return new TileGrid(level, row, column);
+    return new ZeroGIS.TileGrid(level, row, column);
 };
 
 //返回切片在直接付切片中的位置
 ZeroGIS.MathUtils.getTilePositionOfParent = function (level, row, column, /*optional*/ parent) {
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var position = "UNKNOWN";
@@ -551,18 +551,18 @@ ZeroGIS.MathUtils.getTilePositionOfParent = function (level, row, column, /*opti
 
 //获取在某一level周边position的切片
 ZeroGIS.MathUtils.getTileGridByBrother = function (brotherLevel, brotherRow, brotherColumn, position, options) {
-    if (!(Utils.isNonNegativeInteger(brotherLevel))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(brotherLevel))) {
         throw "invalid brotherLevel";
     }
-    if (!(Utils.isNonNegativeInteger(brotherRow))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(brotherRow))) {
         throw "invalid brotherRow";
     }
-    if (!(Utils.isNonNegativeInteger(brotherColumn))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(brotherColumn))) {
         throw "invalid brotherColumn";
     }
 
     options = options || {};
-    var result = new TileGrid(brotherLevel, brotherRow, brotherColumn);
+    var result = new ZeroGIS.TileGrid(brotherLevel, brotherRow, brotherColumn);
     var maxSize;
 
     //TODO maxSize可优化 该level下row/column的最大数量
@@ -609,16 +609,16 @@ ZeroGIS.MathUtils.getTileGridByBrother = function (brotherLevel, brotherRow, bro
  * @returns {null}
  */
 ZeroGIS.MathUtils.getTileGridAncestor = function (ancestorLevel, level, row, column) {
-    if (!Utils.isNonNegativeInteger(ancestorLevel)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(ancestorLevel)) {
         throw "invalid ancestorLevel";
     }
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var result = null;
@@ -628,32 +628,32 @@ ZeroGIS.MathUtils.getTileGridAncestor = function (ancestorLevel, level, row, col
         var a = Math.pow(2, deltaLevel);
         var ancestorRow = Math.floor(row / a);
         var ancestorColumn = Math.floor(column / a);
-        result = new TileGrid(ancestorLevel, ancestorRow, ancestorColumn);
+        result = new ZeroGIS.TileGrid(ancestorLevel, ancestorRow, ancestorColumn);
     } else if (ancestorLevel == level) {
-        result = new TileGrid(level, row, column);
+        result = new ZeroGIS.TileGrid(level, row, column);
     }
     return result;
 };
 
 ZeroGIS.MathUtils.getTileGridByGeo = function (lon, lat, level) {
-    if (!(Utils.isNumber(lon) && lon >= -180 && lon <= 180)) {
+    if (!(ZeroGIS.Utils.isNumber(lon) && lon >= -180 && lon <= 180)) {
         throw "invalid lon";
     }
-    if (!(Utils.isNumber(lat) && lat >= -90 && lat <= 90)) {
+    if (!(ZeroGIS.Utils.isNumber(lat) && lat >= -90 && lat <= 90)) {
         throw "invalid lat";
     }
-    if (!Utils.isNonNegativeInteger(level)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
     var coordWebMercator = this.degreeGeographicToWebMercator(lon, lat);
     var x = coordWebMercator[0];
     var y = coordWebMercator[1];
-    var horX = x + Kernel.MAX_PROJECTED_COORD;
-    var verY = Kernel.MAX_PROJECTED_COORD - y;
-    var size = Kernel.MAX_PROJECTED_COORD / Math.pow(2, level - 1);
+    var horX = x + ZeroGIS.MAX_PROJECTED_COORD;
+    var verY = ZeroGIS.MAX_PROJECTED_COORD - y;
+    var size = ZeroGIS.MAX_PROJECTED_COORD / Math.pow(2, level - 1);
     var row = Math.floor(verY / size);
     var column = Math.floor(horX / size);
-    return new TileGrid(level, row, column);
+    return new ZeroGIS.TileGrid(level, row, column);
 };
 
 /**
@@ -662,7 +662,7 @@ ZeroGIS.MathUtils.getTileGridByGeo = function (lon, lat, level) {
  * @return {*}
  */
 ZeroGIS.MathUtils.degreeToRadian = function (degree) {
-    if (!(Utils.isNumber(degree))) {
+    if (!(ZeroGIS.Utils.isNumber(degree))) {
         throw "invalid degree";
     }
     return degree * this.ONE_DEGREE_EQUAL_RADIAN;
@@ -674,7 +674,7 @@ ZeroGIS.MathUtils.degreeToRadian = function (degree) {
  * @return {*}
  */
 ZeroGIS.MathUtils.radianToDegree = function (radian) {
-    if (!(Utils.isNumber(radian))) {
+    if (!(ZeroGIS.Utils.isNumber(radian))) {
         throw "invalid radian";
     }
     return radian * this.ONE_RADIAN_EQUAL_DEGREE;
@@ -686,10 +686,10 @@ ZeroGIS.MathUtils.radianToDegree = function (radian) {
  * @return {Number} 返回的经度信息以弧度表示
  */
 ZeroGIS.MathUtils.webMercatorXToRadianLog = function (x) {
-    if (!(Utils.isNumber(x))) {
+    if (!(ZeroGIS.Utils.isNumber(x))) {
         throw "invalid x";
     }
-    return x / Kernel.EARTH_RADIUS;
+    return x / ZeroGIS.EARTH_RADIUS;
 };
 
 /**
@@ -698,7 +698,7 @@ ZeroGIS.MathUtils.webMercatorXToRadianLog = function (x) {
  * @return {*} 返回的经度信息以角度表示
  */
 ZeroGIS.MathUtils.webMercatorXToDegreeLog = function (x) {
-    if (!(Utils.isNumber(x))) {
+    if (!(ZeroGIS.Utils.isNumber(x))) {
         throw "invalid x";
     }
     var radianLog = this.webMercatorXToRadianLog(x);
@@ -711,10 +711,10 @@ ZeroGIS.MathUtils.webMercatorXToDegreeLog = function (x) {
  * @return {Number} 返回的纬度信息以弧度表示
  */
 ZeroGIS.MathUtils.webMercatorYToRadianLat = function (y) {
-    if (!(Utils.isNumber(y))) {
+    if (!(ZeroGIS.Utils.isNumber(y))) {
         throw "invalid y";
     }
-    var a = y / Kernel.EARTH_RADIUS;
+    var a = y / ZeroGIS.EARTH_RADIUS;
     var b = Math.pow(Math.E, a);
     var c = Math.atan(b);
     var radianLat = 2 * c - Math.PI / 2;
@@ -727,7 +727,7 @@ ZeroGIS.MathUtils.webMercatorYToRadianLat = function (y) {
  * @return {*} 返回的纬度信息以角度表示
  */
 ZeroGIS.MathUtils.webMercatorYToDegreeLat = function (y) {
-    if (!(Utils.isNumber(y))) {
+    if (!(ZeroGIS.Utils.isNumber(y))) {
         throw "invalid y";
     }
     var radianLat = this.webMercatorYToRadianLat(y);
@@ -764,10 +764,10 @@ ZeroGIS.MathUtils.webMercatorToDegreeGeographic = function (x, y) {
  * @return {*} 投影坐标x
  */
 ZeroGIS.MathUtils.radianLogToWebMercatorX = function (radianLog) {
-    if (!(Utils.isNumber(radianLog) && radianLog <= (Math.PI + 0.001) && radianLog >= -(Math.PI + 0.001))) {
+    if (!(ZeroGIS.Utils.isNumber(radianLog) && radianLog <= (Math.PI + 0.001) && radianLog >= -(Math.PI + 0.001))) {
         throw "invalid radianLog";
     }
-    return Kernel.EARTH_RADIUS * radianLog;
+    return ZeroGIS.EARTH_RADIUS * radianLog;
 };
 
 /**
@@ -776,7 +776,7 @@ ZeroGIS.MathUtils.radianLogToWebMercatorX = function (radianLog) {
  * @return {*} 投影坐标x
  */
 ZeroGIS.MathUtils.degreeLogToWebMercatorX = function (degreeLog) {
-    if (!(Utils.isNumber(degreeLog) && degreeLog <= (180 + 0.001) && degreeLog >= -(180 + 0.001))) {
+    if (!(ZeroGIS.Utils.isNumber(degreeLog) && degreeLog <= (180 + 0.001) && degreeLog >= -(180 + 0.001))) {
         throw "invalid degreeLog";
     }
     var radianLog = this.degreeToRadian(degreeLog);
@@ -789,13 +789,13 @@ ZeroGIS.MathUtils.degreeLogToWebMercatorX = function (degreeLog) {
  * @return {Number} 投影坐标y
  */
 ZeroGIS.MathUtils.radianLatToWebMercatorY = function (radianLat) {
-    if (!(Utils.isNumber(radianLat) && radianLat <= (Math.PI / 2 + 0.001) && radianLat >= -(Math.PI / 2 + 0.001))) {
+    if (!(ZeroGIS.Utils.isNumber(radianLat) && radianLat <= (Math.PI / 2 + 0.001) && radianLat >= -(Math.PI / 2 + 0.001))) {
         throw "invalid radianLat";
     }
     var a = Math.PI / 4 + radianLat / 2;
     var b = Math.tan(a);
     var c = Math.log(b);
-    var y = Kernel.EARTH_RADIUS * c;
+    var y = ZeroGIS.EARTH_RADIUS * c;
     return y;
 };
 
@@ -805,7 +805,7 @@ ZeroGIS.MathUtils.radianLatToWebMercatorY = function (radianLat) {
  * @return {Number} 投影坐标y
  */
 ZeroGIS.MathUtils.degreeLatToWebMercatorY = function (degreeLat) {
-    if (!(Utils.isNumber(degreeLat) && degreeLat <= (90 + 0.001) && degreeLat >= -(90 + 0.001))) {
+    if (!(ZeroGIS.Utils.isNumber(degreeLat) && degreeLat <= (90 + 0.001) && degreeLat >= -(90 + 0.001))) {
         throw "invalid degreeLat";
     }
     var radianLat = this.degreeToRadian(degreeLat);
@@ -838,16 +838,16 @@ ZeroGIS.MathUtils.degreeGeographicToWebMercator = function (degreeLog, degreeLat
 
 //根据切片的level、row、column计算该切片所覆盖的投影区域的范围
 ZeroGIS.MathUtils.getTileWebMercatorEnvelopeByGrid = function (level, row, column) {
-    if (!(Utils.isNonNegativeInteger(level))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(level))) {
         throw "invalid level";
     }
-    if (!(Utils.isNonNegativeInteger(row))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(row))) {
         throw "invalid row";
     }
-    if (!(Utils.isNonNegativeInteger(column))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(column))) {
         throw "invalid column";
     }
-    var k = Kernel.MAX_PROJECTED_COORD;
+    var k = ZeroGIS.MAX_PROJECTED_COORD;
     var size = 2 * k / Math.pow(2, level);
     var minX = -k + column * size;
     var maxX = minX + size;
@@ -864,13 +864,13 @@ ZeroGIS.MathUtils.getTileWebMercatorEnvelopeByGrid = function (level, row, colum
 
 //根据切片的level、row、column计算该切片所覆盖的经纬度区域的范围,以经纬度表示返回结果
 ZeroGIS.MathUtils.getTileGeographicEnvelopByGrid = function (level, row, column) {
-    if (!(Utils.isNonNegativeInteger(level))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(level))) {
         throw "invalid level";
     }
-    if (!(Utils.isNonNegativeInteger(row))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(row))) {
         throw "invalid row";
     }
-    if (!(Utils.isNonNegativeInteger(column))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(column))) {
         throw "invalid column";
     }
     var Eproj = this.getTileWebMercatorEnvelopeByGrid(level, row, column);
@@ -887,13 +887,13 @@ ZeroGIS.MathUtils.getTileGeographicEnvelopByGrid = function (level, row, column)
 
 //根据切片的level、row、column计算该切片所覆盖的笛卡尔空间直角坐标系的范围,以x、y、z表示返回结果
 ZeroGIS.MathUtils.getTileCartesianEnvelopByGrid = function (level, row, column) {
-    if (!(Utils.isNonNegativeInteger(level))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(level))) {
         throw "invalid level";
     }
-    if (!(Utils.isNonNegativeInteger(row))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(row))) {
         throw "invalid row";
     }
-    if (!(Utils.isNonNegativeInteger(column))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(column))) {
         throw "invalid column";
     }
     var Egeo = this.getTileGeographicEnvelopByGrid(level, row, column);
@@ -926,13 +926,13 @@ ZeroGIS.MathUtils.getTileCartesianEnvelopByGrid = function (level, row, column) 
  * @return {Array}
  */
 ZeroGIS.MathUtils.getGeographicTileCenter = function (level, row, column) {
-    if (!(Utils.isNonNegativeInteger(level))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(level))) {
         throw "invalid level";
     }
-    if (!(Utils.isNonNegativeInteger(row))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(row))) {
         throw "invalid row";
     }
-    if (!(Utils.isNonNegativeInteger(column))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(column))) {
         throw "invalid column";
     }
     var Egeo = this.getTileGeographicEnvelopByGrid(level, row, column);
@@ -947,13 +947,13 @@ ZeroGIS.MathUtils.getGeographicTileCenter = function (level, row, column) {
 };
 
 ZeroGIS.MathUtils.getCartesianTileCenter = function (level, row, column) {
-    if (!(Utils.isNonNegativeInteger(level))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(level))) {
         throw "invalid level";
     }
-    if (!(Utils.isNonNegativeInteger(row))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(row))) {
         throw "invalid row";
     }
-    if (!(Utils.isNonNegativeInteger(column))) {
+    if (!(ZeroGIS.Utils.isNonNegativeInteger(column))) {
         throw "invalid column";
     }
     var lonLat = this.getGeographicTileCenter(level, row, column);
@@ -968,10 +968,10 @@ ZeroGIS.MathUtils.getCartesianTileCenter = function (level, row, column) {
  * @return {Array} 返回每个顶点的平均法向量的数组
  */
 ZeroGIS.MathUtils.calculateNormals = function (vs, ind) {
-    if (!Utils.isArray(vs)) {
+    if (!ZeroGIS.Utils.isArray(vs)) {
         throw "invalid vs";
     }
-    if (!Utils.isArray(ind)) {
+    if (!ZeroGIS.Utils.isArray(ind)) {
         throw "invalid ind";
     }
     var x = 0;

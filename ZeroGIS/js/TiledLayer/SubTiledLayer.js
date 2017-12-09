@@ -1,4 +1,7 @@
-﻿ZeroGIS.TiledLayer.SubTiledLayer = function (args) {
+﻿/**
+* 
+*/
+ZeroGIS.TiledLayer.SubTiledLayer = function (args) {
     ZeroGIS.Object3D.Object3DComponents.apply(this, arguments);
     this.level = -1;
     //该级要请求的高程数据的层级，7[8,9,10];10[11,12,13];13[14,15,16];16[17,18,19]
@@ -7,7 +10,7 @@
     if (args) {
         if (args.level !== undefined) {
             this.level = args.level;
-            this.elevationLevel = Elevation.getAncestorElevationLevel(this.level);
+            this.elevationLevel = ZeroGIS.Elevation.getAncestorElevationLevel(this.level);
         }
     }
 };
@@ -17,7 +20,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype = new ZeroGIS.Object3D.Object3DCompon
 ZeroGIS.TiledLayer.SubTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.SubTiledLayer;
 
 ZeroGIS.TiledLayer.SubTiledLayer.prototype.draw = function (camera) {
-    if (this.level >= Kernel.TERRAIN_LEVEL && Kernel.globe && Kernel.globe.pitch <= Kernel.TERRAIN_PITCH) {
+    if (this.level >= ZeroGIS.TERRAIN_LEVEL && ZeroGIS.globe && ZeroGIS.globe.pitch <= ZeroGIS.TERRAIN_PITCH) {
         gl.clear(gl.DEPTH_BUFFER_BIT);
         gl.clearDepth(1);
         gl.enable(gl.DEPTH_TEST);
@@ -28,7 +31,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.draw = function (camera) {
 };
 
 ZeroGIS.TiledLayer.SubTiledLayer.prototype.add = function (tile) {
-    if (!(tile instanceof Tile)) {
+    if (!(tile instanceof ZeroGIS.Tile)) {
         throw "invalid tile: not Tile";
     }
     if (tile.level == this.level) {
@@ -137,7 +140,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.updateTiles = function (visibleTileGr
                 url: ""
             };
             args.url = this.tiledLayer.getImageUrl(args.level, args.row, args.column);
-            tile = new Tile(args);
+            tile = new ZeroGIS.Tile(args);
             this.add(tile);
         }
     }
@@ -145,9 +148,9 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.updateTiles = function (visibleTileGr
 
 //如果bForce为true，则表示强制显示为三维，不考虑level
 ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkTerrain = function (bForce) {
-    var globe = Kernel.globe;
-    var show3d = bForce === true ? true : this.level >= Kernel.TERRAIN_LEVEL;
-    if (show3d && globe && globe.camera && globe.camera.pitch < Kernel.TERRAIN_PITCH) {
+    var globe = ZeroGIS.globe;
+    var show3d = bForce === true ? true : this.level >= ZeroGIS.TERRAIN_LEVEL;
+    if (show3d && globe && globe.camera && globe.camera.pitch < ZeroGIS.TERRAIN_PITCH) {
         var tiles = this.children;
         for (var i = 0; i < tiles.length; i++) {
             var tile = tiles[i];
@@ -160,7 +163,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkTerrain = function (bForce) {
 //7 8 9 10; 10 11 12 13; 13 14 15 16; 16 17 18 19;
 ZeroGIS.TiledLayer.SubTiledLayer.prototype.requestElevations = function () {
     var result = [];
-    if (this.level > Kernel.ELEVATION_LEVEL) {
+    if (this.level > ZeroGIS.ELEVATION_LEVEL) {
         var tiles = this.children;
         var i, name;
         for (i = 0; i < tiles.length; i++) {
@@ -179,8 +182,8 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.requestElevations = function () {
             var eleColumn = parseInt(a[2]);
             //只要elevations中有属性name，那么就表示该高程已经请求过或正在请求，这样就不要重新请求了
             //只有在完全没请求过的情况下去请求高程数据
-            if (!Elevation.elevations.hasOwnProperty(name)) {
-                Elevation.requestElevationsByTileGrid(eleLevel, eleRow, eleColumn);
+            if (!ZeroGIS.Elevation.elevations.hasOwnProperty(name)) {
+                ZeroGIS.Elevation.requestElevationsByTileGrid(eleLevel, eleRow, eleColumn);
             }
         }
     }

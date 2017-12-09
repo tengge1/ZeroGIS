@@ -8,7 +8,7 @@ ZeroGIS.Tile = function (args) { //args中包含level、row、column、url即可
         //type如果是GLOBE_TILE，表示其buffer已经设置为一般形式
         //type如果是TERRAIN_TILE，表示其buffer已经设置为高程形式
         //type如果是UNKNOWN，表示buffer没设置
-        this.type = Enum.UNKNOWN;
+        this.type = ZeroGIS.Enum.UNKNOWN;
         this.level = 0;
         this.row = 0;
         this.column = 0;
@@ -44,15 +44,15 @@ ZeroGIS.Tile.prototype.setTileInfo = function (args) {
     this.level = args.level;
     this.row = args.row;
     this.column = args.column;
-    this.elevationLevel = Elevation.getAncestorElevationLevel(this.level);
+    this.elevationLevel = ZeroGIS.Elevation.getAncestorElevationLevel(this.level);
     //经纬度范围
-    var Egeo = MathUtils.getTileGeographicEnvelopByGrid(this.level, this.row, this.column);
+    var Egeo = ZeroGIS.MathUtils.getTileGeographicEnvelopByGrid(this.level, this.row, this.column);
     this.minLon = Egeo.minLon;
     this.minLat = Egeo.minLat;
     this.maxLon = Egeo.maxLon;
     this.maxLat = Egeo.maxLat;
-    var minCoord = MathUtils.degreeGeographicToWebMercator(this.minLon, this.minLat);
-    var maxCoord = MathUtils.degreeGeographicToWebMercator(this.maxLon, this.maxLat);
+    var minCoord = ZeroGIS.MathUtils.degreeGeographicToWebMercator(this.minLon, this.minLat);
+    var maxCoord = ZeroGIS.MathUtils.degreeGeographicToWebMercator(this.maxLon, this.maxLat);
     //投影坐标范围
     this.minX = minCoord[0];
     this.minY = minCoord[1];
@@ -62,7 +62,7 @@ ZeroGIS.Tile.prototype.setTileInfo = function (args) {
         level: this.level,
         url: this.url
     };
-    this.material = new TileMaterial(matArgs);
+    this.material = new ZeroGIS.Object3D.TileMaterial(matArgs);
 };
 
 /**
@@ -75,13 +75,13 @@ ZeroGIS.Tile.prototype.setTileInfo = function (args) {
  * 5.如果bForce为true，则表示强制显示为三维，不考虑level
  */
 ZeroGIS.Tile.prototype.checkTerrain = function (bForce) {
-    var globe = Kernel.globe;
-    var a = bForce === true ? true : this.level >= Kernel.TERRAIN_LEVEL;
-    var shouldShowTerrain = this.type != Enum.TERRAIN_TILE && a && globe && globe.camera && globe.camera.pitch != 90;
+    var globe = ZeroGIS.globe;
+    var a = bForce === true ? true : this.level >= ZeroGIS.TERRAIN_LEVEL;
+    var shouldShowTerrain = this.type != ZeroGIS.Enum.TERRAIN_TILE && a && globe && globe.camera && globe.camera.pitch != 90;
     if (shouldShowTerrain) {
         //应该以TerrainTile显示
         if (!this.elevationInfo) {
-            this.elevationInfo = Elevation.getExactElevation(this.level, this.row, this.column);
+            this.elevationInfo = ZeroGIS.Elevation.getExactElevation(this.level, this.row, this.column);
 
             //            if(this.level - this.elevationLevel == 1){
             //                //当该level与其elevationLevel只相差一级时，可以使用推倒的高程数据
@@ -105,7 +105,7 @@ ZeroGIS.Tile.prototype.checkTerrain = function (bForce) {
             //this.handleGlobeTile();
         }
     } else {
-        if (this.type == Enum.UNKNOWN) {
+        if (this.type == ZeroGIS.Enum.UNKNOWN) {
             //初始type为UNKNOWN，还未初始化buffer，应该显示为GlobeTile
             this.handleGlobeTile();
         }
@@ -114,9 +114,9 @@ ZeroGIS.Tile.prototype.checkTerrain = function (bForce) {
 
 //处理球面的切片
 ZeroGIS.Tile.prototype.handleGlobeTile = function () {
-    this.type = Enum.GLOBE_TILE;
-    if (this.level < Kernel.BASE_LEVEL) {
-        var changeLevel = Kernel.BASE_LEVEL - this.level;
+    this.type = ZeroGIS.Enum.GLOBE_TILE;
+    if (this.level < ZeroGIS.BASE_LEVEL) {
+        var changeLevel = ZeroGIS.BASE_LEVEL - this.level;
         this.segment = Math.pow(2, changeLevel);
     } else {
         this.segment = 1;
@@ -126,7 +126,7 @@ ZeroGIS.Tile.prototype.handleGlobeTile = function () {
 
 //处理地形的切片
 ZeroGIS.Tile.prototype.handleTerrainTile = function () {
-    this.type = Enum.TERRAIN_TILE;
+    this.type = ZeroGIS.Enum.TERRAIN_TILE;
     this.segment = 10;
     this.handleTile();
 };
@@ -142,7 +142,7 @@ ZeroGIS.Tile.prototype.handleTile = function () {
     var deltaX = (this.maxX - this.minX) / this.segment;
     var deltaY = (this.maxY - this.minY) / this.segment;
     var deltaTextureCoord = 1.0 / this.segment;
-    var changeElevation = this.type == Enum.TERRAIN_TILE && this.elevationInfo;
+    var changeElevation = this.type == ZeroGIS.Enum.TERRAIN_TILE && this.elevationInfo;
     //level不同设置的半径也不同
     var levelDeltaR = 0; //this.level * 100;
     //对WebMercator投影进行等间距划分格网
@@ -165,8 +165,8 @@ ZeroGIS.Tile.prototype.handleTile = function () {
             var merX = mercatorXs[j];
             var merY = mercatorYs[i];
             var ele = changeElevation ? this.elevationInfo.elevations[(this.segment + 1) * i + j] : 0;
-            var lonlat = MathUtils.webMercatorToDegreeGeographic(merX, merY);
-            var p = MathUtils.geographicToCartesianCoord(lonlat[0], lonlat[1], Kernel.EARTH_RADIUS + ele + levelDeltaR).getArray();
+            var lonlat = ZeroGIS.MathUtils.webMercatorToDegreeGeographic(merX, merY);
+            var p = ZeroGIS.MathUtils.geographicToCartesianCoord(lonlat[0], lonlat[1], ZeroGIS.EARTH_RADIUS + ele + levelDeltaR).getArray();
             vertices = vertices.concat(p); //顶点坐标
             textureCoords = textureCoords.concat(textureSs[j], textureTs[i]); //纹理坐标
         }
