@@ -1,5 +1,5 @@
 ﻿/**
-* Vector
+* 向量
 */
 ZeroGIS.Vector = function (x, y, z) {
     x = x !== undefined ? x : 0;

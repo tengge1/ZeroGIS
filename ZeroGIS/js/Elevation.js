@@ -1,5 +1,5 @@
 ﻿/**
-* Elevation
+* 海拔
 */
 ZeroGIS.Elevation = {
     //sampleserver4.arcgisonline.com

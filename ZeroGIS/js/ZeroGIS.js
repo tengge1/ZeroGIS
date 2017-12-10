@@ -1,5 +1,5 @@
 ﻿/**
-* ZeroGIS
+* ZeroGIS配置信息和全局变量
 */
 var ZeroGIS = {
     gl: null,

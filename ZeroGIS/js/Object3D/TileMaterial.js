@@ -4,7 +4,7 @@
 ZeroGIS.Object3D.TileMaterial = function (args) {
     if (args) {
         if (!args.image && typeof args.url == "string") {
-            var tileImage = ZeroGIS.Image1.get(args.url);
+            var tileImage = ZeroGIS.Image.get(args.url);
             if (tileImage) {
                 args.image = tileImage;
                 delete args.url;
@@ -20,8 +20,8 @@ ZeroGIS.Object3D.TileMaterial.prototype = new ZeroGIS.Object3D.TextureMaterial()
 ZeroGIS.Object3D.TileMaterial.prototype.constructor = ZeroGIS.Object3D.TileMaterial;
 
 ZeroGIS.Object3D.TileMaterial.prototype.onLoad = function (event) {
-    if (this.level <= ZeroGIS.Image1.MAX_LEVEL) {
-        ZeroGIS.Image1.add(this.image.src, this.image);
+    if (this.level <= ZeroGIS.Image.MAX_LEVEL) {
+        ZeroGIS.Image.add(this.image.src, this.image);
     }
     ZeroGIS.Object3D.TextureMaterial.prototype.onLoad.apply(this, arguments);
 };

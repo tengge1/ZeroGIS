@@ -1,5 +1,5 @@
 ﻿/**
-* Vertice
+* 3D顶点
 */
 ZeroGIS.Vertice = function (x, y, z) {
     x = x !== undefined ? x : 0;

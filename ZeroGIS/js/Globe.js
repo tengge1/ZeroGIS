@@ -38,7 +38,7 @@ ZeroGIS.Globe.prototype = {
 
         clearTimeout(this.idTimeOut);
         //在更换切片图层的类型时清空缓存的图片
-        ZeroGIS.Image1.clear();
+        ZeroGIS.Image.clear();
         if (this.tiledLayer) {
             var b = this.scene.remove(this.tiledLayer);
             if (!b) {

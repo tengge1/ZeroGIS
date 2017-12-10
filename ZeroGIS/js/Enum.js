@@ -1,5 +1,5 @@
 ﻿/**
-* Enum
+* ZeroGIS中的常量
 */
 ZeroGIS.Enum = {
     UNKNOWN: "UNKNOWN",

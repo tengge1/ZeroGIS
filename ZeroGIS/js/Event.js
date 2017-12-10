@@ -1,5 +1,5 @@
 ﻿/**
-* Event
+* 地图事件
 */
 ZeroGIS.Event = {
     canvas: null,

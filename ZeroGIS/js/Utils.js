@@ -1,5 +1,5 @@
 ﻿/**
-* Utils
+* 通用工具
 */
 ZeroGIS.Utils = {
     GREATER: "GREATER",

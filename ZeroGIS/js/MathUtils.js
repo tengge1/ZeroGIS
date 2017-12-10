@@ -1,5 +1,5 @@
 ﻿/**
-* MathUtils
+* GIS数学工具
 */
 ZeroGIS.MathUtils = {
     ONE_RADIAN_EQUAL_DEGREE: 57.29577951308232, //180/Math.PI
