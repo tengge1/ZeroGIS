@@ -83,8 +83,6 @@
     <Content Include="js\Object3D\Line.js" />
     <Content Include="js\Object3D\Object3DComponents.js" />
     <Content Include="js\Object3D\PerspectiveCamera.js" />
-    <Content Include="js\Object3D\Plan.js" />
-    <Content Include="js\Object3D\Ray.js" />
     <Content Include="js\Object3D\Scene.js" />
     <Content Include="js\Object3D\ShaderContent.js" />
     <Content Include="js\Object3D\TextureMaterial.js" />

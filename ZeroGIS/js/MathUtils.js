@@ -110,7 +110,7 @@ ZeroGIS.MathUtils.getTriangleArea = function (v1, v2, v3) {
     var v2Copy = v2.getCopy();
     var v3Copy = v3.getCopy();
     var direction = v3Copy.minus(v2Copy);
-    var line = new ZeroGIS.Object3D.Line(v2Copy, direction);
+    var line = new ZeroGIS.Line(v2Copy, direction);
     var h = this.getLengthFromVerticeToLine(v1Copy, line);
     var w = this.getLengthFromVerticeToVertice(v2Copy, v3Copy);
     var area = 0.5 * w * h;
@@ -234,7 +234,7 @@ ZeroGIS.MathUtils.getVerticeVerticalIntersectPointWidthPlan = function (vertice,
 };
 
 ZeroGIS.MathUtils.getIntersectPointByLineAdPlan = function (line, plan) {
-    if (!(line instanceof ZeroGIS.Object3D.Line)) {
+    if (!(line instanceof ZeroGIS.Line)) {
         throw "invalid line";
     }
     if (!(plan instanceof ZeroGIS.Object3D.Plan)) {
@@ -268,7 +268,7 @@ ZeroGIS.MathUtils.getIntersectPointByLineAdPlan = function (line, plan) {
  * @return {Array}
  */
 ZeroGIS.MathUtils.getLineIntersectPointWithEarth = function (line) {
-    if (!(line instanceof ZeroGIS.Object3D.Line)) {
+    if (!(line instanceof ZeroGIS.Line)) {
         throw "invalid line";
     }
     var result = [];

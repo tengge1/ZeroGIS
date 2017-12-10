@@ -1,7 +1,7 @@
 ﻿/**
-* TextureMaterial
+* 纹理材质
 */
-ZeroGIS.Object3D.TextureMaterial = function (args) {
+ZeroGIS.TextureMaterial = function (args) {
     if (args) {
         this.texture = gl.createTexture();
         this.image = null;
@@ -15,14 +15,14 @@ ZeroGIS.Object3D.TextureMaterial = function (args) {
     }
 };
 
-ZeroGIS.Object3D.TextureMaterial.prototype.setImage = function (image) {
+ZeroGIS.TextureMaterial.prototype.setImage = function (image) {
     if (image instanceof Image && image.width > 0 && image.height > 0) {
         this.image = image;
         this.onLoad();
     }
 };
 
-ZeroGIS.Object3D.TextureMaterial.prototype.setImageUrl = function (url) {
+ZeroGIS.TextureMaterial.prototype.setImageUrl = function (url) {
     if (!ZeroGIS.Utils.isString(url)) {
         throw "invalid url: not string";
     }
@@ -33,7 +33,7 @@ ZeroGIS.Object3D.TextureMaterial.prototype.setImageUrl = function (url) {
 };
 
 //图片加载完成时触发
-ZeroGIS.Object3D.TextureMaterial.prototype.onLoad = function () {
+ZeroGIS.TextureMaterial.prototype.onLoad = function () {
     //要考虑纹理已经被移除掉了图片才进入onLoad这种情况
     if (this.delete) {
         return;
@@ -56,7 +56,7 @@ ZeroGIS.Object3D.TextureMaterial.prototype.onLoad = function () {
 };
 
 //释放显卡中的texture资源
-ZeroGIS.Object3D.TextureMaterial.prototype.releaseTexture = function () {
+ZeroGIS.TextureMaterial.prototype.releaseTexture = function () {
     if (gl.isTexture(this.texture)) {
         gl.deleteTexture(this.texture);
         this.delete = true;

@@ -1,7 +1,7 @@
 ﻿/**
-* TileMaterial
+* 瓦片材质
 */
-ZeroGIS.Object3D.TileMaterial = function (args) {
+ZeroGIS.TileMaterial = function (args) {
     if (args) {
         if (!args.image && typeof args.url == "string") {
             var tileImage = ZeroGIS.Image.get(args.url);
@@ -11,17 +11,17 @@ ZeroGIS.Object3D.TileMaterial = function (args) {
             }
         }
         this.level = typeof args.level == "number" && args.level >= 0 ? args.level : 20;
-        ZeroGIS.Object3D.TextureMaterial.apply(this, arguments);
+        ZeroGIS.TextureMaterial.apply(this, arguments);
     }
 };
 
-ZeroGIS.Object3D.TileMaterial.prototype = new ZeroGIS.Object3D.TextureMaterial();
+ZeroGIS.TileMaterial.prototype = new ZeroGIS.TextureMaterial();
 
-ZeroGIS.Object3D.TileMaterial.prototype.constructor = ZeroGIS.Object3D.TileMaterial;
+ZeroGIS.TileMaterial.prototype.constructor = ZeroGIS.TileMaterial;
 
-ZeroGIS.Object3D.TileMaterial.prototype.onLoad = function (event) {
+ZeroGIS.TileMaterial.prototype.onLoad = function (event) {
     if (this.level <= ZeroGIS.Image.MAX_LEVEL) {
         ZeroGIS.Image.add(this.image.src, this.image);
     }
-    ZeroGIS.Object3D.TextureMaterial.prototype.onLoad.apply(this, arguments);
+    ZeroGIS.TextureMaterial.prototype.onLoad.apply(this, arguments);
 };

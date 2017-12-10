@@ -1,7 +1,5 @@
 ﻿/**
 * 三维对象的基类
-* @param args
-* @constructor
 */
 ZeroGIS.Object3D = function (args) {
     this.id = ++ZeroGIS.idCounter;
@@ -60,7 +58,7 @@ ZeroGIS.Object3D.prototype = {
             }
 
             //使用纹理
-            if (this.material instanceof ZeroGIS.Object3D.TextureMaterial) {
+            if (this.material instanceof ZeroGIS.TextureMaterial) {
                 if (this.textureCoords.length > 0) { //提供了纹理坐标
                     if (!(gl.isBuffer(this.textureCoordBuffer))) {
                         this.textureCoordBuffer = gl.createBuffer();
@@ -89,7 +87,7 @@ ZeroGIS.Object3D.prototype = {
         //   throw "invalid camera : not World.PerspectiveCamera";
         // }
         if (this.visible) {
-            if (this.material instanceof ZeroGIS.Object3D.TextureMaterial && this.material.loaded) {
+            if (this.material instanceof ZeroGIS.TextureMaterial && this.material.loaded) {
                 gl.enableVertexAttribArray(gl.shaderProgram.aTextureCoord);
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
                 gl.vertexAttribPointer(gl.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
@@ -137,7 +135,7 @@ ZeroGIS.Object3D.prototype = {
     destroy: function () {
         this.parent = null;
         this.releaseBuffers();
-        if (this.material instanceof ZeroGIS.Object3D.TextureMaterial) {
+        if (this.material instanceof ZeroGIS.TextureMaterial) {
             this.material.releaseTexture();
             this.material = null;
         }

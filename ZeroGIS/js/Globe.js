@@ -15,12 +15,12 @@ ZeroGIS.Globe = function (canvas, args) {
     this.scene = null;
     this.camera = null;
     this.tiledLayer = null;
-    var vs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.VS_CONTENT;
-    var fs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.FS_CONTENT;
-    this.renderer = ZeroGIS.renderer = new ZeroGIS.Object3D.WebGLRenderer(canvas, vs_content, fs_content);
-    this.scene = new ZeroGIS.Object3D.Scene();
+    var vs_content = ZeroGIS.ShaderContent.SIMPLE_SHADER.VS_CONTENT;
+    var fs_content = ZeroGIS.ShaderContent.SIMPLE_SHADER.FS_CONTENT;
+    this.renderer = ZeroGIS.renderer = new ZeroGIS.WebGLRenderer(canvas, vs_content, fs_content);
+    this.scene = new ZeroGIS.Scene();
     var radio = canvas.width / canvas.height;
-    this.camera = new ZeroGIS.Object3D.PerspectiveCamera(30, radio, 1.0, 20000000.0);
+    this.camera = new ZeroGIS.PerspectiveCamera(30, radio, 1.0, 20000000.0);
     this.renderer.bindScene(this.scene);
     this.renderer.bindCamera(this.camera);
     this.setLevel(0);
@@ -86,7 +86,7 @@ ZeroGIS.Globe.prototype = {
         }
         level = level > this.MAX_LEVEL ? this.MAX_LEVEL : level; //超过最大的渲染级别就不渲染
         if (level != this.CURRENT_LEVEL) {
-            if (this.camera instanceof ZeroGIS.Object3D.PerspectiveCamera) {
+            if (this.camera instanceof ZeroGIS.PerspectiveCamera) {
                 //要先执行camera.setLevel,然后再刷新
                 this.camera.setLevel(level);
                 this.refresh();

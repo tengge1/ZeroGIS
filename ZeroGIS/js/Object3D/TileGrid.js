@@ -1,5 +1,5 @@
 ﻿/**
-* TileGrid
+* 瓦片网格
 */
 ZeroGIS.TileGrid = function (level, row, column) {
     if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {

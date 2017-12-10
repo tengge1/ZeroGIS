@@ -2,7 +2,7 @@
 * 
 */
 ZeroGIS.TiledLayer.SubTiledLayer = function (args) {
-    ZeroGIS.Object3D.Object3DComponents.apply(this, arguments);
+    ZeroGIS.Object3DComponents.apply(this, arguments);
     this.level = -1;
     //该级要请求的高程数据的层级，7[8,9,10];10[11,12,13];13[14,15,16];16[17,18,19]
     this.elevationLevel = -1;
@@ -15,7 +15,7 @@ ZeroGIS.TiledLayer.SubTiledLayer = function (args) {
     }
 };
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype = new ZeroGIS.Object3D.Object3DComponents();
+ZeroGIS.TiledLayer.SubTiledLayer.prototype = new ZeroGIS.Object3DComponents();
 
 ZeroGIS.TiledLayer.SubTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.SubTiledLayer;
 
@@ -27,7 +27,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.draw = function (camera) {
     } else {
         gl.disable(gl.DEPTH_TEST);
     }
-    ZeroGIS.Object3D.Object3DComponents.prototype.draw.apply(this, arguments);
+    ZeroGIS.Object3DComponents.prototype.draw.apply(this, arguments);
 };
 
 ZeroGIS.TiledLayer.SubTiledLayer.prototype.add = function (tile) {
@@ -35,7 +35,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.add = function (tile) {
         throw "invalid tile: not Tile";
     }
     if (tile.level == this.level) {
-        ZeroGIS.Object3D.Object3DComponents.prototype.add.apply(this, arguments);
+        ZeroGIS.Object3DComponents.prototype.add.apply(this, arguments);
         tile.subTiledLayer = this;
     }
 };
@@ -60,7 +60,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.getImageUrl = function (level, row, c
 
 //重写Object3DComponents的destroy方法
 ZeroGIS.TiledLayer.SubTiledLayer.prototype.destroy = function () {
-    ZeroGIS.Object3D.Object3DComponents.prototype.destroy.apply(this, arguments);
+    ZeroGIS.Object3DComponents.prototype.destroy.apply(this, arguments);
     this.tiledLayer = null;
 };
 

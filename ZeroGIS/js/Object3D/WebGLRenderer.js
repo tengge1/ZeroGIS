@@ -1,4 +1,7 @@
-﻿ZeroGIS.Object3D.WebGLRenderer = function (canvas, vertexShaderText, fragmentShaderText) {
+﻿/**
+* WebGL渲染器
+*/
+ZeroGIS.WebGLRenderer = function (canvas, vertexShaderText, fragmentShaderText) {
     if (!(canvas instanceof HTMLCanvasElement)) {
         throw "invalid canvas: not HTMLCanvasElement";
     }
@@ -118,14 +121,14 @@
     //gl.enable(gl.TEXTURE_2D);//WebGL: INVALID_ENUM: enable: invalid capability
 };
 
-ZeroGIS.Object3D.WebGLRenderer.prototype = {
-    constructor: ZeroGIS.Object3D.WebGLRenderer,
+ZeroGIS.WebGLRenderer.prototype = {
+    constructor: ZeroGIS.WebGLRenderer,
 
     render: function (scene, camera) {
-        if (!(scene instanceof ZeroGIS.Object3D.Scene)) {
+        if (!(scene instanceof ZeroGIS.Scene)) {
             throw "invalid scene: not World.Scene";
         }
-        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
+        if (!(camera instanceof ZeroGIS.PerspectiveCamera)) {
             throw "invalid camera: not World.PerspectiveCamera";
         }
         gl.viewport(0, 0, ZeroGIS.canvas.width, ZeroGIS.canvas.height);
@@ -136,21 +139,21 @@ ZeroGIS.Object3D.WebGLRenderer.prototype = {
     },
 
     bindScene: function (scene) {
-        if (!(scene instanceof ZeroGIS.Object3D.Scene)) {
+        if (!(scene instanceof ZeroGIS.Scene)) {
             throw "invalid scene: not World.Scene";
         }
         this.scene = scene;
     },
 
     bindCamera: function (camera) {
-        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
+        if (!(camera instanceof ZeroGIS.PerspectiveCamera)) {
             throw "invalid camera: not World.PerspectiveCamera";
         }
         this.camera = camera;
     },
 
     tick: function () {
-        if (ZeroGIS.renderer instanceof ZeroGIS.Object3D.WebGLRenderer) {
+        if (ZeroGIS.renderer instanceof ZeroGIS.WebGLRenderer) {
             if (ZeroGIS.renderer.scene && ZeroGIS.renderer.camera) {
                 ZeroGIS.renderer.render(ZeroGIS.renderer.scene, ZeroGIS.renderer.camera);
             }

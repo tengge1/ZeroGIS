@@ -2,17 +2,17 @@
 * TiledLayer
 */
 ZeroGIS.TiledLayer = function (args) {
-    ZeroGIS.Object3D.Object3DComponents.apply(this, arguments);
+    ZeroGIS.Object3DComponents.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.prototype = new ZeroGIS.Object3D.Object3DComponents();
+ZeroGIS.TiledLayer.prototype = new ZeroGIS.Object3DComponents();
 ZeroGIS.TiledLayer.prototype.constructor = ZeroGIS.TiledLayer;
 
 ZeroGIS.TiledLayer.prototype.add = function (subTiledLayer) {
     if (!(subTiledLayer instanceof ZeroGIS.TiledLayer.SubTiledLayer)) {
         throw "invalid subTiledLayer: not World.SubTiledLayer";
     }
-    ZeroGIS.Object3D.Object3DComponents.prototype.add.apply(this, arguments);
+    ZeroGIS.Object3DComponents.prototype.add.apply(this, arguments);
     subTiledLayer.tiledLayer = this;
 };
 

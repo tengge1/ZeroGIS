@@ -1,7 +1,7 @@
 ﻿/**
-* PerspectiveCamera
+* 透视相机
 */
-ZeroGIS.Object3D.PerspectiveCamera = function (fov, aspect, near, far) {
+ZeroGIS.PerspectiveCamera = function (fov, aspect, near, far) {
     fov = fov !== undefined ? fov : 90;
     aspect = aspect !== undefined ? aspect : 1;
     near = near !== undefined ? near : 1;
@@ -28,15 +28,15 @@ ZeroGIS.Object3D.PerspectiveCamera = function (fov, aspect, near, far) {
     this.setPerspectiveMatrix(this.fov, this.aspect, this.near, this.far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype = new ZeroGIS.Object3D();
-ZeroGIS.Object3D.PerspectiveCamera.prototype.constructor = ZeroGIS.Object3D.PerspectiveCamera;
+ZeroGIS.PerspectiveCamera.prototype = new ZeroGIS.Object3D();
+ZeroGIS.PerspectiveCamera.prototype.constructor = ZeroGIS.PerspectiveCamera;
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.Enum = {
+ZeroGIS.PerspectiveCamera.prototype.Enum = {
     EARTH_FULL_OVERSPREAD_SCREEN: "EARTH_FULL_OVERSPREAD_SCREEN", //Canvas内全部被地球充满
     EARTH_NOT_FULL_OVERSPREAD_SCREEN: "EARTH_NOT_FULL_OVERSPREAD_SCREEN" //Canvas没有全部被地球充满
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setPerspectiveMatrix = function (fov, aspect, near, far) {
+ZeroGIS.PerspectiveCamera.prototype.setPerspectiveMatrix = function (fov, aspect, near, far) {
     fov = fov !== undefined ? fov : 90;
     aspect = aspect !== undefined ? aspect : 1;
     near = near !== undefined ? near : 1;
@@ -81,7 +81,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.setPerspectiveMatrix = function (fo
       mat[12], mat[13], mat[14], mat[15]);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getLightDirection = function () {
+ZeroGIS.PerspectiveCamera.prototype.getLightDirection = function () {
     var dirVertice = this.matrix.getColumnZ();
     var direction = new ZeroGIS.Vector(-dirVertice.x, -dirVertice.y, -dirVertice.z);
     direction.normalize();
@@ -89,46 +89,46 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getLightDirection = function () {
 };
 
 //获取投影矩阵与视点矩阵的乘积
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getProjViewMatrix = function () {
+ZeroGIS.PerspectiveCamera.prototype.getProjViewMatrix = function () {
     var viewMatrix = this.getViewMatrix();
     var projViewMatrix = this.projMatrix.multiplyMatrix(viewMatrix);
     return projViewMatrix;
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setFov = function (fov) {
+ZeroGIS.PerspectiveCamera.prototype.setFov = function (fov) {
     if (!ZeroGIS.Utils.isPositive(fov)) {
         throw "invalid fov";
     }
     this.setPerspectiveMatrix(fov, this.aspect, this.near, this.far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setAspect = function (aspect) {
+ZeroGIS.PerspectiveCamera.prototype.setAspect = function (aspect) {
     if (!ZeroGIS.Utils.isPositive(aspect)) {
         throw "invalid aspect";
     }
     this.setPerspectiveMatrix(this.fov, aspect, this.near, this.far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setNear = function (near) {
+ZeroGIS.PerspectiveCamera.prototype.setNear = function (near) {
     if (!ZeroGIS.Utils.isPositive(near)) {
         throw "invalid near";
     }
     this.setPerspectiveMatrix(this.fov, this.aspect, near, this.far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setFar = function (far) {
+ZeroGIS.PerspectiveCamera.prototype.setFar = function (far) {
     if (!ZeroGIS.Utils.isPositive(far)) {
         throw "invalid far";
     }
     this.setPerspectiveMatrix(this.fov, this.aspect, this.near, far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getViewMatrix = function () {
+ZeroGIS.PerspectiveCamera.prototype.getViewMatrix = function () {
     //视点矩阵是camera的模型矩阵的逆矩阵
     return this.matrix.getInverseMatrix();
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.look = function (cameraPnt, targetPnt, upDirection) {
+ZeroGIS.PerspectiveCamera.prototype.look = function (cameraPnt, targetPnt, upDirection) {
     if (!(cameraPnt instanceof ZeroGIS.Vertice)) {
         throw "invalid cameraPnt: not Vertice";
     }
@@ -162,7 +162,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.look = function (cameraPnt, targetP
     this.setFar(far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.lookAt = function (targetPnt, upDirection) {
+ZeroGIS.PerspectiveCamera.prototype.lookAt = function (targetPnt, upDirection) {
     if (!(targetPnt instanceof ZeroGIS.Vertice)) {
         throw "invalid targetPnt: not Vertice";
     }
@@ -177,7 +177,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.lookAt = function (targetPnt, upDir
 };
 
 //点变换: World->NDC
-ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromWorldToNDC = function (verticeInWorld, /*optional*/ projViewMatrix) {
+ZeroGIS.PerspectiveCamera.prototype.convertVerticeFromWorldToNDC = function (verticeInWorld, /*optional*/ projViewMatrix) {
     if (!(verticeInWorld instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInWorld: not Vertice";
     }
@@ -197,7 +197,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromWorldToNDC = func
 };
 
 //点变换: NDC->World
-ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromNdcToWorld = function (verticeInNDC) {
+ZeroGIS.PerspectiveCamera.prototype.convertVerticeFromNdcToWorld = function (verticeInNDC) {
     if (!(verticeInNDC instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInNDC: not Vertice";
     }
@@ -218,7 +218,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromNdcToWorld = func
 };
 
 //点变换: Camera->World
-ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromCameraToWorld = function (verticeInCamera, /*optional*/ viewMatrix) {
+ZeroGIS.PerspectiveCamera.prototype.convertVerticeFromCameraToWorld = function (verticeInCamera, /*optional*/ viewMatrix) {
     if (!(verticeInCamera instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInCamera: not Vertice";
     }
@@ -234,7 +234,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromCameraToWorld = f
 };
 
 //向量变换: Camera->World
-ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVectorFromCameraToWorld = function (vectorInCamera, /*optional*/ viewMatrix) {
+ZeroGIS.PerspectiveCamera.prototype.convertVectorFromCameraToWorld = function (vectorInCamera, /*optional*/ viewMatrix) {
     if (!(vectorInCamera instanceof ZeroGIS.Vector)) {
         throw "invalid vectorInCamera: not Vector";
     }
@@ -251,7 +251,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVectorFromCameraToWorld = fu
 };
 
 //根据canvasX和canvasY获取拾取向量
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByCanvas = function (canvasX, canvasY) {
+ZeroGIS.PerspectiveCamera.prototype.getPickDirectionByCanvas = function (canvasX, canvasY) {
     if (!ZeroGIS.Utils.isNumber(canvasX)) {
         throw "invalid canvasX: not number";
     }
@@ -264,16 +264,16 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByCanvas = function
 };
 
 //获取当前视线与地球的交点
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getDirectionIntersectPointWithEarth = function () {
+ZeroGIS.PerspectiveCamera.prototype.getDirectionIntersectPointWithEarth = function () {
     var dir = this.getLightDirection();
     var p = this.getPosition();
-    var line = new ZeroGIS.Object3D.Line(p, dir);
+    var line = new ZeroGIS.Line(p, dir);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
 
 //根据ndcX和ndcY获取拾取向量
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByNDC = function (ndcX, ndcY) {
+ZeroGIS.PerspectiveCamera.prototype.getPickDirectionByNDC = function (ndcX, ndcY) {
     if (!ZeroGIS.Utils.isNumber(ndcX)) {
         throw "invalid ndcX: not number";
     }
@@ -289,8 +289,8 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByNDC = function (n
 };
 
 //获取直线与地球的交点，该方法与World.Math.getLineIntersectPointWithEarth功能基本一样，只不过该方法对相交点进行了远近排序
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine = function (line) {
-    if (!(line instanceof ZeroGIS.Object3D.Line)) {
+ZeroGIS.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine = function (line) {
+    if (!(line instanceof ZeroGIS.Line)) {
         throw "invalid line: not Line";
     }
     var result = [];
@@ -316,7 +316,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine 
 };
 
 //计算拾取射线与地球的交点，以笛卡尔空间直角坐标系坐标组的组的形式返回
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByCanvas = function (canvasX, canvasY, options) {
+ZeroGIS.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByCanvas = function (canvasX, canvasY, options) {
     if (!ZeroGIS.Utils.isNumber(canvasX)) {
         throw "invalid canvasX: not number";
     }
@@ -325,12 +325,12 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByCanva
     }
     var pickDirection = this.getPickDirectionByCanvas(canvasX, canvasY);
     var p = this.getPosition();
-    var line = new ZeroGIS.Object3D.Line(p, pickDirection);
+    var line = new ZeroGIS.Line(p, pickDirection);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByNDC = function (ndcX, ndcY) {
+ZeroGIS.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByNDC = function (ndcX, ndcY) {
     if (!ZeroGIS.Utils.isNumber(ndcX)) {
         throw "invalid ndcX: not number";
     }
@@ -339,13 +339,13 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByNDC =
     }
     var pickDirection = this.getPickDirectionByNDC(ndcX, ndcY);
     var p = this.getPosition();
-    var line = new ZeroGIS.Object3D.Line(p, pickDirection);
+    var line = new ZeroGIS.Line(p, pickDirection);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
 
 //得到摄像机的XOZ平面的方程
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPlanXOZ = function () {
+ZeroGIS.PerspectiveCamera.prototype.getPlanXOZ = function () {
     var position = this.getPosition();
     var direction = this.getLightDirection();
     var plan = ZeroGIS.MathUtils.getCrossPlaneByLine(position, direction);
@@ -353,7 +353,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPlanXOZ = function () {
 };
 
 //设置观察到的层级
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setLevel = function (level) {
+ZeroGIS.PerspectiveCamera.prototype.setLevel = function (level) {
     if (!ZeroGIS.Utils.isInteger(level)) {
         throw "invalid level";
     }
@@ -383,7 +383,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.setLevel = function (level) {
 
 //判断世界坐标系中的点是否在Canvas中可见
 //options:projView、verticeInNDC
-ZeroGIS.Object3D.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = function (verticeInWorld, options) {
+ZeroGIS.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = function (verticeInWorld, options) {
     if (!(verticeInWorld instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInWorld: not Vertice";
     }
@@ -391,7 +391,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = fun
     var threshold = typeof options.threshold == "number" ? Math.abs(options.threshold) : 1;
     var cameraP = this.getPosition();
     var dir = verticeInWorld.minus(cameraP);
-    var line = new ZeroGIS.Object3D.Line(cameraP, dir);
+    var line = new ZeroGIS.Line(cameraP, dir);
     var pickResult = this.getPickCartesianCoordInEarthByLine(line);
     if (pickResult.length > 0) {
         var pickVertice = pickResult[0];
@@ -413,7 +413,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = fun
 
 //判断地球表面的某个经纬度在Canvas中是否应该可见
 //options:projView、verticeInNDC
-ZeroGIS.Object3D.PerspectiveCamera.prototype.isGeoVisibleInCanvas = function (lon, lat, options) {
+ZeroGIS.PerspectiveCamera.prototype.isGeoVisibleInCanvas = function (lon, lat, options) {
     var verticeInWorld = ZeroGIS.MathUtils.geographicToCartesianCoord(lon, lat);
     var result = this.isWorldVerticeVisibleInCanvas(verticeInWorld, options);
     return result;
@@ -428,7 +428,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.isGeoVisibleInCanvas = function (lo
  */
 //获取level层级下的可见切片
 //options:projView
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (level, options) {
+ZeroGIS.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (level, options) {
     if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
@@ -543,7 +543,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
 };
 
 //options:projView
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (level, row, column, options) {
+ZeroGIS.PerspectiveCamera.prototype.getTileVisibleInfo = function (level, row, column, options) {
     if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
@@ -677,7 +677,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (leve
 };
 
 //地球一直是关于纵轴中心对称的，获取垂直方向上中心点信息
-ZeroGIS.Object3D.PerspectiveCamera.prototype._getVerticalVisibleCenterInfo = function (options) {
+ZeroGIS.PerspectiveCamera.prototype._getVerticalVisibleCenterInfo = function (options) {
     options = options || {};
     if (!options.projView) {
         options.projView = this.getProjViewMatrix();

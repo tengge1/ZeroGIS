@@ -1,7 +1,6 @@
 ﻿/**
-* Tile
+* 瓦片
 */
-
 ZeroGIS.Tile = function (args) { //args中包含level、row、column、url即可
     if (args) {
         this.subTiledLayer = null;
@@ -62,7 +61,7 @@ ZeroGIS.Tile.prototype.setTileInfo = function (args) {
         level: this.level,
         url: this.url
     };
-    this.material = new ZeroGIS.Object3D.TileMaterial(matArgs);
+    this.material = new ZeroGIS.TileMaterial(matArgs);
 };
 
 /**

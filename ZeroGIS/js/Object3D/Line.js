@@ -1,7 +1,7 @@
 ﻿/**
-* Line
+* 线
 */
-ZeroGIS.Object3D.Line = function (position, direction) {
+ZeroGIS.Line = function (position, direction) {
     if (!(position instanceof ZeroGIS.Vertice)) {
         throw "invalid position";
     }
@@ -13,9 +13,9 @@ ZeroGIS.Object3D.Line = function (position, direction) {
     this.vector.normalize();
 };
 
-ZeroGIS.Object3D.Line.prototype.constructor = ZeroGIS.Object3D.Line;
+ZeroGIS.Line.prototype.constructor = ZeroGIS.Line;
 
-ZeroGIS.Object3D.Line.prototype.setVertice = function (position) {
+ZeroGIS.Line.prototype.setVertice = function (position) {
     if (!(position instanceof ZeroGIS.Vertice)) {
         throw "invalid position";
     }
@@ -23,7 +23,7 @@ ZeroGIS.Object3D.Line.prototype.setVertice = function (position) {
     return this;
 };
 
-ZeroGIS.Object3D.Line.prototype.setVector = function (direction) {
+ZeroGIS.Line.prototype.setVector = function (direction) {
     if (!(direction instanceof ZeroGIS.Vector)) {
         throw "invalid direction";
     }
@@ -32,7 +32,7 @@ ZeroGIS.Object3D.Line.prototype.setVector = function (direction) {
     return this;
 };
 
-ZeroGIS.Object3D.Line.prototype.getCopy = function () {
-    var lineCopy = new ZeroGIS.Object3D.Line(this.vertice, this.vector);
+ZeroGIS.Line.prototype.getCopy = function () {
+    var lineCopy = new ZeroGIS.Line(this.vertice, this.vector);
     return lineCopy;
 };

@@ -1,7 +1,7 @@
 ﻿/**
 * 三维对象集合
 */
-ZeroGIS.Object3D.Object3DComponents = function () {
+ZeroGIS.Object3DComponents = function () {
     this.id = ++ZeroGIS.idCounter;
     this.matrix = new ZeroGIS.Matrix();
     this.visible = true;
@@ -9,11 +9,11 @@ ZeroGIS.Object3D.Object3DComponents = function () {
     this.children = [];
 };
 
-ZeroGIS.Object3D.Object3DComponents.prototype = {
-    constructor: ZeroGIS.Object3D.Object3DComponents,
+ZeroGIS.Object3DComponents.prototype = {
+    constructor: ZeroGIS.Object3DComponents,
 
     add: function (obj) {
-        if (!(obj instanceof ZeroGIS.Object3D || obj instanceof ZeroGIS.Object3D.Object3DComponents)) {
+        if (!(obj instanceof ZeroGIS.Object3D || obj instanceof ZeroGIS.Object3DComponents)) {
             throw "invalid obj: not World.Object3D or Object3DComponents";
         }
 
@@ -69,7 +69,7 @@ ZeroGIS.Object3D.Object3DComponents.prototype = {
     },
 
     draw: function (camera) {
-        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
+        if (!(camera instanceof ZeroGIS.PerspectiveCamera)) {
             throw "invalid camera: not World.PerspectiveCamera";
         }
 

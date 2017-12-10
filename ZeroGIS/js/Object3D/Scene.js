@@ -1,10 +1,10 @@
 ﻿/**
-* Scene
+* 场景
 */
-ZeroGIS.Object3D.Scene = function (args) {
-    ZeroGIS.Object3D.Object3DComponents.apply(this, arguments);
+ZeroGIS.Scene = function (args) {
+    ZeroGIS.Object3DComponents.apply(this, arguments);
 };
 
-ZeroGIS.Object3D.Scene.prototype = new ZeroGIS.Object3D.Object3DComponents();
+ZeroGIS.Scene.prototype = new ZeroGIS.Object3DComponents();
 
-ZeroGIS.Object3D.Scene.prototype.constructor = ZeroGIS.Object3D.Scene;
+ZeroGIS.Scene.prototype.constructor = ZeroGIS.Scene;
