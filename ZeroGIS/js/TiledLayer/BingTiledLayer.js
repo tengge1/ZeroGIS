@@ -13,8 +13,8 @@ ZeroGIS.TiledLayer.BingTiledLayer.prototype.getImageUrl = function (level, row, 
     var url = "";
     var tileX = column;
     var tileY = row;
-    var strTileX2 = MathUtils.numerationSystemFrom10(2, tileX);
-    var strTileY2 = MathUtils.numerationSystemFrom10(2, tileY);
+    var strTileX2 = ZeroGIS.MathUtils.numerationSystemFrom10(2, tileX);
+    var strTileY2 = ZeroGIS.MathUtils.numerationSystemFrom10(2, tileY);
     var delta = strTileX2.length - strTileY2.length;
     var i;
     if (delta > 0) {
@@ -33,7 +33,7 @@ ZeroGIS.TiledLayer.BingTiledLayer.prototype.getImageUrl = function (level, row, 
         var charX = strTileX2[i];
         strMerge2 += charY + charX;
     }
-    var strMerge4 = MathUtils.numerationSystemChange(2, 4, strMerge2);
+    var strMerge4 = ZeroGIS.MathUtils.numerationSystemChange(2, 4, strMerge2);
     if (strMerge4.length < level) {
         delta = level - strMerge4.length;
         for (i = 0; i < delta; i++) {
@@ -43,6 +43,6 @@ ZeroGIS.TiledLayer.BingTiledLayer.prototype.getImageUrl = function (level, row, 
     var sum = level + row + column;
     var serverIdx = sum % 8; //0,1,2,3,4,5,6,7
     //var styles = ['a','r','h']
-    url = "//ecn.t" + serverIdx + ".tiles.virtualearth.net/tiles/h" + strMerge4 + ".jpeg?g=1239&mkt=en-us";
+    url = "//ecn.t" + serverIdx + ".tiles.virtualearth.net/tiles/h" + strMerge4 + ".jpeg?g=1239&mkt=zh-cn";
     return url;
 };
