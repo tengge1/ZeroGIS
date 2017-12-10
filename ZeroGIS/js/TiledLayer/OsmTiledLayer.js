@@ -2,7 +2,7 @@
 * OpenStreetMap
 */
 ZeroGIS.TiledLayer.OsmTiledLayer = function (args) {
-    TiledLayer.apply(this, arguments);
+    ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
 ZeroGIS.TiledLayer.OsmTiledLayer.prototype = new ZeroGIS.TiledLayer();
