@@ -21,15 +21,15 @@
       "js/Object3D/Object3D.js",
       "js/Object3D/ShaderContent.js",
       "js/Object3D/WebGLRenderer.js",
-      "js/Object3D/Object3DComponents.js",
       "js/Object3D/Line.js",
       "js/Object3D/PerspectiveCamera.js",
+      "js/Object3D/Object3DComponents.js",
       "js/Object3D/Scene.js",
-
       "js/Object3D/TextureMaterial.js",
       "js/Object3D/TileMaterial.js",
       "js/Object3D/Tile.js",
       "js/Object3D/TileGrid.js",
+
       "js/MathUtils.js",
       "js/Event.js",
       "js/Globe.js",
@@ -40,7 +40,11 @@
       "js/TiledLayer/BingTiledLayer.js",
       "js/TiledLayer/OsmTiledLayer.js",
       "js/TiledLayer/SosoTiledLayer.js",
-      "js/TiledLayer/TiandituTiledLayer.js"
+      "js/TiledLayer/TiandituTiledLayer.js",
+      "js/TiledLayer/NokiaTiledLayer.js",
+      "js/TiledLayer/ArcGISTiledLayer.js",
+      "js/TiledLayer/AutonaviTiledLayer.js",
+      "js/TiledLayer/BlendTiledLayer.js"
     ],
     "dest": "dist/js",
     "fileName": "ZeroGIS"

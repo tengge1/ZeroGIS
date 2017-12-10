@@ -1,5 +1,5 @@
 /**
-* ZeroGIS
+* ZeroGIS配置信息和全局变量
 */
 var ZeroGIS = {
     gl: null,
@@ -18,7 +18,7 @@ var ZeroGIS = {
 };
 
 /**
-* Enum
+* ZeroGIS中的常量
 */
 ZeroGIS.Enum = {
     UNKNOWN: "UNKNOWN",
@@ -34,7 +34,7 @@ ZeroGIS.Enum = {
 };
 
 /**
-* Utils
+* 通用工具
 */
 ZeroGIS.Utils = {
     GREATER: "GREATER",
@@ -272,7 +272,7 @@ ZeroGIS.Utils = {
 };
 
 /**
-* Vertice
+* 3D顶点
 */
 ZeroGIS.Vertice = function (x, y, z) {
     x = x !== undefined ? x : 0;
@@ -334,7 +334,7 @@ ZeroGIS.Vertice.prototype = {
 
 
 /**
-* Vector
+* 向量
 */
 ZeroGIS.Vector = function (x, y, z) {
     x = x !== undefined ? x : 0;
@@ -504,7 +504,7 @@ ZeroGIS.Vector.prototype = {
 };
 
 /**
-* Matrix
+* 矩阵
 */
 ZeroGIS.Matrix = function (m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44) {
     this.elements = new Float32Array(16);
@@ -1048,14 +1048,14 @@ ZeroGIS.Matrix.prototype = {
 };
 
 /**
-* 缓存图片信息1、2、3、4级的图片信息
+* 缓存图片信息
 */
-ZeroGIS.Image1 = {
+ZeroGIS.Image = {
     MAX_LEVEL: 4, //缓存图片的最大level
     images: {}
 };
 
-ZeroGIS.Image1.add = function (url, img) {
+ZeroGIS.Image.add = function (url, img) {
     if (!ZeroGIS.Utils.isString(url)) {
         throw "invalid url: not string";
     }
@@ -1065,25 +1065,25 @@ ZeroGIS.Image1.add = function (url, img) {
     this.images[url] = img;
 };
 
-ZeroGIS.Image1.get = function (url) {
+ZeroGIS.Image.get = function (url) {
     if (!ZeroGIS.Utils.isString(url)) {
         throw "invalid url: not string";
     }
     return this.images[url];
 };
 
-ZeroGIS.Image1.remove = function (url) {
+ZeroGIS.Image.remove = function (url) {
     if (!(ZeroGIS.Utils.isString(url))) {
         throw "invalid url: not string";
     }
     delete this.images[url];
 };
 
-ZeroGIS.Image1.clear = function () {
+ZeroGIS.Image.clear = function () {
     this.images = {};
 };
 
-ZeroGIS.Image1.getCount = function () {
+ZeroGIS.Image.getCount = function () {
     var count = 0;
     for (var url in this.images) {
         if (this.images.hasOwnProperty(url)) {
@@ -1095,7 +1095,7 @@ ZeroGIS.Image1.getCount = function () {
 
 
 /**
-* Elevation
+* 海拔
 */
 ZeroGIS.Elevation = {
     //sampleserver4.arcgisonline.com
@@ -1402,8 +1402,6 @@ ZeroGIS.Elevation.getLinearElevationFromParent3 = function (parent3Elevations, l
 
 /**
 * 三维对象的基类
-* @param args
-* @constructor
 */
 ZeroGIS.Object3D = function (args) {
     this.id = ++ZeroGIS.idCounter;
@@ -1462,7 +1460,7 @@ ZeroGIS.Object3D.prototype = {
             }
 
             //使用纹理
-            if (this.material instanceof ZeroGIS.Object3D.TextureMaterial) {
+            if (this.material instanceof ZeroGIS.TextureMaterial) {
                 if (this.textureCoords.length > 0) { //提供了纹理坐标
                     if (!(gl.isBuffer(this.textureCoordBuffer))) {
                         this.textureCoordBuffer = gl.createBuffer();
@@ -1491,7 +1489,7 @@ ZeroGIS.Object3D.prototype = {
         //   throw "invalid camera : not World.PerspectiveCamera";
         // }
         if (this.visible) {
-            if (this.material instanceof ZeroGIS.Object3D.TextureMaterial && this.material.loaded) {
+            if (this.material instanceof ZeroGIS.TextureMaterial && this.material.loaded) {
                 gl.enableVertexAttribArray(gl.shaderProgram.aTextureCoord);
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
                 gl.vertexAttribPointer(gl.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
@@ -1539,7 +1537,7 @@ ZeroGIS.Object3D.prototype = {
     destroy: function () {
         this.parent = null;
         this.releaseBuffers();
-        if (this.material instanceof ZeroGIS.Object3D.TextureMaterial) {
+        if (this.material instanceof ZeroGIS.TextureMaterial) {
             this.material.releaseTexture();
             this.material = null;
         }
@@ -1629,16 +1627,50 @@ ZeroGIS.Object3D.prototype = {
 
 
 /**
-* ZeroGIS.Object3D.ShaderContent
+* 着色器程序
 */
-ZeroGIS.Object3D.ShaderContent = {};
+ZeroGIS.ShaderContent = {};
 
-ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER = {
-    VS_CONTENT: "attribute vec3 aVertexPosition;\nattribute vec2 aTextureCoord;\nvarying vec2 vTextureCoord;\nuniform mat4 uMVMatrix;\nuniform mat4 uPMatrix;\nvoid main()\n{\ngl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,1.0);\nvTextureCoord = aTextureCoord;\n}",
-    FS_CONTENT: "#ifdef GL_ES\nprecision highp float;\n#endif\nuniform bool uUseTexture;\nuniform float uShininess;\nuniform vec3 uLightDirection;\nuniform vec4 uLightAmbient;\nuniform vec4 uLightDiffuse;\nuniform vec4 uLightSpecular;\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nvoid main()\n{\ngl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));\n}"
+ZeroGIS.ShaderContent.SIMPLE_SHADER = {
+    VS_CONTENT: `
+        attribute vec3 aVertexPosition;
+        attribute vec2 aTextureCoord;
+
+        varying vec2 vTextureCoord;
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+
+        void main() {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          vTextureCoord = aTextureCoord;
+        }`,
+
+    FS_CONTENT: `
+        #ifdef GL_ES
+        precision highp float;
+        #endif
+
+        uniform bool uUseTexture;
+        uniform float uShininess;
+        uniform vec3 uLightDirection;
+        uniform vec4 uLightAmbient;
+        uniform vec4 uLightDiffuse;
+        uniform vec4 uLightSpecular;
+
+        varying vec2 vTextureCoord;
+
+        uniform sampler2D uSampler;
+
+        void main() {
+          gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        }`
 };
 
-ZeroGIS.Object3D.WebGLRenderer = function (canvas, vertexShaderText, fragmentShaderText) {
+/**
+* WebGL渲染器
+*/
+ZeroGIS.WebGLRenderer = function (canvas, vertexShaderText, fragmentShaderText) {
     if (!(canvas instanceof HTMLCanvasElement)) {
         throw "invalid canvas: not HTMLCanvasElement";
     }
@@ -1758,14 +1790,14 @@ ZeroGIS.Object3D.WebGLRenderer = function (canvas, vertexShaderText, fragmentSha
     //gl.enable(gl.TEXTURE_2D);//WebGL: INVALID_ENUM: enable: invalid capability
 };
 
-ZeroGIS.Object3D.WebGLRenderer.prototype = {
-    constructor: ZeroGIS.Object3D.WebGLRenderer,
+ZeroGIS.WebGLRenderer.prototype = {
+    constructor: ZeroGIS.WebGLRenderer,
 
     render: function (scene, camera) {
-        if (!(scene instanceof ZeroGIS.Object3D.Scene)) {
+        if (!(scene instanceof ZeroGIS.Scene)) {
             throw "invalid scene: not World.Scene";
         }
-        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
+        if (!(camera instanceof ZeroGIS.PerspectiveCamera)) {
             throw "invalid camera: not World.PerspectiveCamera";
         }
         gl.viewport(0, 0, ZeroGIS.canvas.width, ZeroGIS.canvas.height);
@@ -1776,21 +1808,21 @@ ZeroGIS.Object3D.WebGLRenderer.prototype = {
     },
 
     bindScene: function (scene) {
-        if (!(scene instanceof ZeroGIS.Object3D.Scene)) {
+        if (!(scene instanceof ZeroGIS.Scene)) {
             throw "invalid scene: not World.Scene";
         }
         this.scene = scene;
     },
 
     bindCamera: function (camera) {
-        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
+        if (!(camera instanceof ZeroGIS.PerspectiveCamera)) {
             throw "invalid camera: not World.PerspectiveCamera";
         }
         this.camera = camera;
     },
 
     tick: function () {
-        if (ZeroGIS.renderer instanceof ZeroGIS.Object3D.WebGLRenderer) {
+        if (ZeroGIS.renderer instanceof ZeroGIS.WebGLRenderer) {
             if (ZeroGIS.renderer.scene && ZeroGIS.renderer.camera) {
                 ZeroGIS.renderer.render(ZeroGIS.renderer.scene, ZeroGIS.renderer.camera);
             }
@@ -1813,145 +1845,9 @@ ZeroGIS.Object3D.WebGLRenderer.prototype = {
 };
 
 /**
-* 三维对象集合
+* 线
 */
-ZeroGIS.Object3D.Object3DComponents = function () {
-    this.id = ++ZeroGIS.idCounter;
-    this.matrix = new ZeroGIS.Matrix();
-    this.visible = true;
-    this.parent = null;
-    this.children = [];
-};
-
-ZeroGIS.Object3D.Object3DComponents.prototype = {
-    constructor: ZeroGIS.Object3D.Object3DComponents,
-
-    add: function (obj) {
-        if (!(obj instanceof ZeroGIS.Object3D || obj instanceof ZeroGIS.Object3D.Object3DComponents)) {
-            throw "invalid obj: not World.Object3D or Object3DComponents";
-        }
-
-        if (this.findObjById(obj.id) !== null) {
-            console.debug("obj已经存在于Object3DComponents中，无法将其再次加入！");
-            return;
-        } else {
-            this.children.push(obj);
-            obj.parent = this;
-        }
-    },
-
-    remove: function (obj) {
-        if (obj) {
-            var result = this.findObjById(obj.id);
-            if (result === null) {
-                console.debug("obj不存在于Object3DComponents中，所以无法将其从中删除！");
-                return false;
-            }
-            obj.destroy();
-            this.children.splice(result.index, 1);
-            obj = null;
-            return true;
-        } else {
-            return false;
-        }
-    },
-
-    //销毁所有的子节点
-    clear: function () {
-        for (var i = 0; i < this.children.length; i++) {
-            var obj = this.children[i];
-            obj.destroy();
-        }
-        this.children = [];
-    },
-
-    //销毁自身及其子节点
-    destroy: function () {
-        this.parent = null;
-        this.clear();
-    },
-
-    findObjById: function (objId) {
-        for (var i = 0; i < this.children.length; i++) {
-            var obj = this.children[i];
-            if (obj.id == objId) {
-                obj.index = i;
-                return obj;
-            }
-        }
-        return null;
-    },
-
-    draw: function (camera) {
-        if (!(camera instanceof ZeroGIS.Object3D.PerspectiveCamera)) {
-            throw "invalid camera: not World.PerspectiveCamera";
-        }
-
-        for (var i = 0; i < this.children.length; i++) {
-            var obj = this.children[i];
-            if (obj) {
-                if (obj.visible) {
-                    obj.draw(camera);
-                }
-            }
-        }
-    },
-
-    worldTranslate: function (x, y, z) {
-        this.matrix.worldTranslate(x, y, z);
-    },
-
-    localTranslate: function (x, y, z) {
-        this.matrix.localTranslate(x, y, z);
-    },
-
-    worldScale: function (scaleX, scaleY, scaleZ) {
-        this.matrix.worldScale(scaleX, scaleY, scaleZ);
-    },
-
-    localScale: function (scaleX, scaleY, scaleZ) {
-        this.matrix.localScale(scaleX, scaleY, scaleZ);
-    },
-
-    worldRotateX: function (radian) {
-        this.matrix.worldRotateX(radian);
-    },
-
-    worldRotateY: function (radian) {
-        this.matrix.worldRotateY(radian);
-    },
-
-    worldRotateZ: function (radian) {
-        this.matrix.worldRotateZ(radian);
-    },
-
-    worldRotateByVector: function (radian, vector) {
-        this.matrix.worldRotateByVector(radian, vector);
-    },
-
-    localRotateX: function (radian) {
-        this.matrix.localRotateX(radian);
-    },
-
-    localRotateY: function (radian) {
-        this.matrix.localRotateY(radian);
-    },
-
-    localRotateZ: function (radian) {
-        this.matrix.localRotateZ(radian);
-    },
-
-    //localVector指的是相对于模型坐标系中的向量
-    localRotateByVector: function (radian, localVector) {
-        this.matrix.localRotateByVector(radian, localVector);
-    }
-};
-
-
-/**
-* Line
-*/
-ZeroGIS.Object3D.Line = function (position, direction) {
+ZeroGIS.Line = function (position, direction) {
     if (!(position instanceof ZeroGIS.Vertice)) {
         throw "invalid position";
     }
@@ -1963,9 +1859,9 @@ ZeroGIS.Object3D.Line = function (position, direction) {
     this.vector.normalize();
 };
 
-ZeroGIS.Object3D.Line.prototype.constructor = ZeroGIS.Object3D.Line;
+ZeroGIS.Line.prototype.constructor = ZeroGIS.Line;
 
-ZeroGIS.Object3D.Line.prototype.setVertice = function (position) {
+ZeroGIS.Line.prototype.setVertice = function (position) {
     if (!(position instanceof ZeroGIS.Vertice)) {
         throw "invalid position";
     }
@@ -1973,7 +1869,7 @@ ZeroGIS.Object3D.Line.prototype.setVertice = function (position) {
     return this;
 };
 
-ZeroGIS.Object3D.Line.prototype.setVector = function (direction) {
+ZeroGIS.Line.prototype.setVector = function (direction) {
     if (!(direction instanceof ZeroGIS.Vector)) {
         throw "invalid direction";
     }
@@ -1982,16 +1878,16 @@ ZeroGIS.Object3D.Line.prototype.setVector = function (direction) {
     return this;
 };
 
-ZeroGIS.Object3D.Line.prototype.getCopy = function () {
-    var lineCopy = new ZeroGIS.Object3D.Line(this.vertice, this.vector);
+ZeroGIS.Line.prototype.getCopy = function () {
+    var lineCopy = new ZeroGIS.Line(this.vertice, this.vector);
     return lineCopy;
 };
 
 
 /**
-* PerspectiveCamera
+* 透视相机
 */
-ZeroGIS.Object3D.PerspectiveCamera = function (fov, aspect, near, far) {
+ZeroGIS.PerspectiveCamera = function (fov, aspect, near, far) {
     fov = fov !== undefined ? fov : 90;
     aspect = aspect !== undefined ? aspect : 1;
     near = near !== undefined ? near : 1;
@@ -2018,15 +1914,15 @@ ZeroGIS.Object3D.PerspectiveCamera = function (fov, aspect, near, far) {
     this.setPerspectiveMatrix(this.fov, this.aspect, this.near, this.far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype = new ZeroGIS.Object3D();
-ZeroGIS.Object3D.PerspectiveCamera.prototype.constructor = ZeroGIS.Object3D.PerspectiveCamera;
+ZeroGIS.PerspectiveCamera.prototype = new ZeroGIS.Object3D();
+ZeroGIS.PerspectiveCamera.prototype.constructor = ZeroGIS.PerspectiveCamera;
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.Enum = {
+ZeroGIS.PerspectiveCamera.prototype.Enum = {
     EARTH_FULL_OVERSPREAD_SCREEN: "EARTH_FULL_OVERSPREAD_SCREEN", //Canvas内全部被地球充满
     EARTH_NOT_FULL_OVERSPREAD_SCREEN: "EARTH_NOT_FULL_OVERSPREAD_SCREEN" //Canvas没有全部被地球充满
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setPerspectiveMatrix = function (fov, aspect, near, far) {
+ZeroGIS.PerspectiveCamera.prototype.setPerspectiveMatrix = function (fov, aspect, near, far) {
     fov = fov !== undefined ? fov : 90;
     aspect = aspect !== undefined ? aspect : 1;
     near = near !== undefined ? near : 1;
@@ -2071,7 +1967,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.setPerspectiveMatrix = function (fo
       mat[12], mat[13], mat[14], mat[15]);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getLightDirection = function () {
+ZeroGIS.PerspectiveCamera.prototype.getLightDirection = function () {
     var dirVertice = this.matrix.getColumnZ();
     var direction = new ZeroGIS.Vector(-dirVertice.x, -dirVertice.y, -dirVertice.z);
     direction.normalize();
@@ -2079,46 +1975,46 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getLightDirection = function () {
 };
 
 //获取投影矩阵与视点矩阵的乘积
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getProjViewMatrix = function () {
+ZeroGIS.PerspectiveCamera.prototype.getProjViewMatrix = function () {
     var viewMatrix = this.getViewMatrix();
     var projViewMatrix = this.projMatrix.multiplyMatrix(viewMatrix);
     return projViewMatrix;
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setFov = function (fov) {
+ZeroGIS.PerspectiveCamera.prototype.setFov = function (fov) {
     if (!ZeroGIS.Utils.isPositive(fov)) {
         throw "invalid fov";
     }
     this.setPerspectiveMatrix(fov, this.aspect, this.near, this.far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setAspect = function (aspect) {
+ZeroGIS.PerspectiveCamera.prototype.setAspect = function (aspect) {
     if (!ZeroGIS.Utils.isPositive(aspect)) {
         throw "invalid aspect";
     }
     this.setPerspectiveMatrix(this.fov, aspect, this.near, this.far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setNear = function (near) {
+ZeroGIS.PerspectiveCamera.prototype.setNear = function (near) {
     if (!ZeroGIS.Utils.isPositive(near)) {
         throw "invalid near";
     }
     this.setPerspectiveMatrix(this.fov, this.aspect, near, this.far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setFar = function (far) {
+ZeroGIS.PerspectiveCamera.prototype.setFar = function (far) {
     if (!ZeroGIS.Utils.isPositive(far)) {
         throw "invalid far";
     }
     this.setPerspectiveMatrix(this.fov, this.aspect, this.near, far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getViewMatrix = function () {
+ZeroGIS.PerspectiveCamera.prototype.getViewMatrix = function () {
     //视点矩阵是camera的模型矩阵的逆矩阵
     return this.matrix.getInverseMatrix();
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.look = function (cameraPnt, targetPnt, upDirection) {
+ZeroGIS.PerspectiveCamera.prototype.look = function (cameraPnt, targetPnt, upDirection) {
     if (!(cameraPnt instanceof ZeroGIS.Vertice)) {
         throw "invalid cameraPnt: not Vertice";
     }
@@ -2152,7 +2048,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.look = function (cameraPnt, targetP
     this.setFar(far);
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.lookAt = function (targetPnt, upDirection) {
+ZeroGIS.PerspectiveCamera.prototype.lookAt = function (targetPnt, upDirection) {
     if (!(targetPnt instanceof ZeroGIS.Vertice)) {
         throw "invalid targetPnt: not Vertice";
     }
@@ -2167,7 +2063,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.lookAt = function (targetPnt, upDir
 };
 
 //点变换: World->NDC
-ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromWorldToNDC = function (verticeInWorld, /*optional*/ projViewMatrix) {
+ZeroGIS.PerspectiveCamera.prototype.convertVerticeFromWorldToNDC = function (verticeInWorld, /*optional*/ projViewMatrix) {
     if (!(verticeInWorld instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInWorld: not Vertice";
     }
@@ -2187,7 +2083,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromWorldToNDC = func
 };
 
 //点变换: NDC->World
-ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromNdcToWorld = function (verticeInNDC) {
+ZeroGIS.PerspectiveCamera.prototype.convertVerticeFromNdcToWorld = function (verticeInNDC) {
     if (!(verticeInNDC instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInNDC: not Vertice";
     }
@@ -2208,7 +2104,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromNdcToWorld = func
 };
 
 //点变换: Camera->World
-ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromCameraToWorld = function (verticeInCamera, /*optional*/ viewMatrix) {
+ZeroGIS.PerspectiveCamera.prototype.convertVerticeFromCameraToWorld = function (verticeInCamera, /*optional*/ viewMatrix) {
     if (!(verticeInCamera instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInCamera: not Vertice";
     }
@@ -2224,7 +2120,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVerticeFromCameraToWorld = f
 };
 
 //向量变换: Camera->World
-ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVectorFromCameraToWorld = function (vectorInCamera, /*optional*/ viewMatrix) {
+ZeroGIS.PerspectiveCamera.prototype.convertVectorFromCameraToWorld = function (vectorInCamera, /*optional*/ viewMatrix) {
     if (!(vectorInCamera instanceof ZeroGIS.Vector)) {
         throw "invalid vectorInCamera: not Vector";
     }
@@ -2241,7 +2137,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.convertVectorFromCameraToWorld = fu
 };
 
 //根据canvasX和canvasY获取拾取向量
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByCanvas = function (canvasX, canvasY) {
+ZeroGIS.PerspectiveCamera.prototype.getPickDirectionByCanvas = function (canvasX, canvasY) {
     if (!ZeroGIS.Utils.isNumber(canvasX)) {
         throw "invalid canvasX: not number";
     }
@@ -2254,16 +2150,16 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByCanvas = function
 };
 
 //获取当前视线与地球的交点
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getDirectionIntersectPointWithEarth = function () {
+ZeroGIS.PerspectiveCamera.prototype.getDirectionIntersectPointWithEarth = function () {
     var dir = this.getLightDirection();
     var p = this.getPosition();
-    var line = new ZeroGIS.Object3D.Line(p, dir);
+    var line = new ZeroGIS.Line(p, dir);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
 
 //根据ndcX和ndcY获取拾取向量
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByNDC = function (ndcX, ndcY) {
+ZeroGIS.PerspectiveCamera.prototype.getPickDirectionByNDC = function (ndcX, ndcY) {
     if (!ZeroGIS.Utils.isNumber(ndcX)) {
         throw "invalid ndcX: not number";
     }
@@ -2279,8 +2175,8 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickDirectionByNDC = function (n
 };
 
 //获取直线与地球的交点，该方法与World.Math.getLineIntersectPointWithEarth功能基本一样，只不过该方法对相交点进行了远近排序
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine = function (line) {
-    if (!(line instanceof ZeroGIS.Object3D.Line)) {
+ZeroGIS.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine = function (line) {
+    if (!(line instanceof ZeroGIS.Line)) {
         throw "invalid line: not Line";
     }
     var result = [];
@@ -2306,7 +2202,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByLine 
 };
 
 //计算拾取射线与地球的交点，以笛卡尔空间直角坐标系坐标组的组的形式返回
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByCanvas = function (canvasX, canvasY, options) {
+ZeroGIS.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByCanvas = function (canvasX, canvasY, options) {
     if (!ZeroGIS.Utils.isNumber(canvasX)) {
         throw "invalid canvasX: not number";
     }
@@ -2315,12 +2211,12 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByCanva
     }
     var pickDirection = this.getPickDirectionByCanvas(canvasX, canvasY);
     var p = this.getPosition();
-    var line = new ZeroGIS.Object3D.Line(p, pickDirection);
+    var line = new ZeroGIS.Line(p, pickDirection);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
 
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByNDC = function (ndcX, ndcY) {
+ZeroGIS.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByNDC = function (ndcX, ndcY) {
     if (!ZeroGIS.Utils.isNumber(ndcX)) {
         throw "invalid ndcX: not number";
     }
@@ -2329,13 +2225,13 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPickCartesianCoordInEarthByNDC =
     }
     var pickDirection = this.getPickDirectionByNDC(ndcX, ndcY);
     var p = this.getPosition();
-    var line = new ZeroGIS.Object3D.Line(p, pickDirection);
+    var line = new ZeroGIS.Line(p, pickDirection);
     var result = this.getPickCartesianCoordInEarthByLine(line);
     return result;
 };
 
 //得到摄像机的XOZ平面的方程
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getPlanXOZ = function () {
+ZeroGIS.PerspectiveCamera.prototype.getPlanXOZ = function () {
     var position = this.getPosition();
     var direction = this.getLightDirection();
     var plan = ZeroGIS.MathUtils.getCrossPlaneByLine(position, direction);
@@ -2343,7 +2239,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getPlanXOZ = function () {
 };
 
 //设置观察到的层级
-ZeroGIS.Object3D.PerspectiveCamera.prototype.setLevel = function (level) {
+ZeroGIS.PerspectiveCamera.prototype.setLevel = function (level) {
     if (!ZeroGIS.Utils.isInteger(level)) {
         throw "invalid level";
     }
@@ -2373,7 +2269,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.setLevel = function (level) {
 
 //判断世界坐标系中的点是否在Canvas中可见
 //options:projView、verticeInNDC
-ZeroGIS.Object3D.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = function (verticeInWorld, options) {
+ZeroGIS.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = function (verticeInWorld, options) {
     if (!(verticeInWorld instanceof ZeroGIS.Vertice)) {
         throw "invalid verticeInWorld: not Vertice";
     }
@@ -2381,7 +2277,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = fun
     var threshold = typeof options.threshold == "number" ? Math.abs(options.threshold) : 1;
     var cameraP = this.getPosition();
     var dir = verticeInWorld.minus(cameraP);
-    var line = new ZeroGIS.Object3D.Line(cameraP, dir);
+    var line = new ZeroGIS.Line(cameraP, dir);
     var pickResult = this.getPickCartesianCoordInEarthByLine(line);
     if (pickResult.length > 0) {
         var pickVertice = pickResult[0];
@@ -2403,7 +2299,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.isWorldVerticeVisibleInCanvas = fun
 
 //判断地球表面的某个经纬度在Canvas中是否应该可见
 //options:projView、verticeInNDC
-ZeroGIS.Object3D.PerspectiveCamera.prototype.isGeoVisibleInCanvas = function (lon, lat, options) {
+ZeroGIS.PerspectiveCamera.prototype.isGeoVisibleInCanvas = function (lon, lat, options) {
     var verticeInWorld = ZeroGIS.MathUtils.geographicToCartesianCoord(lon, lat);
     var result = this.isWorldVerticeVisibleInCanvas(verticeInWorld, options);
     return result;
@@ -2418,7 +2314,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.isGeoVisibleInCanvas = function (lo
  */
 //获取level层级下的可见切片
 //options:projView
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (level, options) {
+ZeroGIS.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (level, options) {
     if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
@@ -2533,7 +2429,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getVisibleTilesByLevel = function (
 };
 
 //options:projView
-ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (level, row, column, options) {
+ZeroGIS.PerspectiveCamera.prototype.getTileVisibleInfo = function (level, row, column, options) {
     if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
@@ -2667,7 +2563,7 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype.getTileVisibleInfo = function (leve
 };
 
 //地球一直是关于纵轴中心对称的，获取垂直方向上中心点信息
-ZeroGIS.Object3D.PerspectiveCamera.prototype._getVerticalVisibleCenterInfo = function (options) {
+ZeroGIS.PerspectiveCamera.prototype._getVerticalVisibleCenterInfo = function (options) {
     options = options || {};
     if (!options.projView) {
         options.projView = this.getProjViewMatrix();
@@ -2715,21 +2611,157 @@ ZeroGIS.Object3D.PerspectiveCamera.prototype._getVerticalVisibleCenterInfo = fun
 };
 
 /**
-* Scene
+* 三维对象集合
 */
-ZeroGIS.Object3D.Scene = function (args) {
-    ZeroGIS.Object3D.Object3DComponents.apply(this, arguments);
+ZeroGIS.Object3DComponents = function () {
+    this.id = ++ZeroGIS.idCounter;
+    this.matrix = new ZeroGIS.Matrix();
+    this.visible = true;
+    this.parent = null;
+    this.children = [];
 };
 
-ZeroGIS.Object3D.Scene.prototype = new ZeroGIS.Object3D.Object3DComponents();
+ZeroGIS.Object3DComponents.prototype = {
+    constructor: ZeroGIS.Object3DComponents,
 
-ZeroGIS.Object3D.Scene.prototype.constructor = ZeroGIS.Object3D.Scene;
+    add: function (obj) {
+        if (!(obj instanceof ZeroGIS.Object3D || obj instanceof ZeroGIS.Object3DComponents)) {
+            throw "invalid obj: not World.Object3D or Object3DComponents";
+        }
+
+        if (this.findObjById(obj.id) !== null) {
+            console.debug("obj已经存在于Object3DComponents中，无法将其再次加入！");
+            return;
+        } else {
+            this.children.push(obj);
+            obj.parent = this;
+        }
+    },
+
+    remove: function (obj) {
+        if (obj) {
+            var result = this.findObjById(obj.id);
+            if (result === null) {
+                console.debug("obj不存在于Object3DComponents中，所以无法将其从中删除！");
+                return false;
+            }
+            obj.destroy();
+            this.children.splice(result.index, 1);
+            obj = null;
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    //销毁所有的子节点
+    clear: function () {
+        for (var i = 0; i < this.children.length; i++) {
+            var obj = this.children[i];
+            obj.destroy();
+        }
+        this.children = [];
+    },
+
+    //销毁自身及其子节点
+    destroy: function () {
+        this.parent = null;
+        this.clear();
+    },
+
+    findObjById: function (objId) {
+        for (var i = 0; i < this.children.length; i++) {
+            var obj = this.children[i];
+            if (obj.id == objId) {
+                obj.index = i;
+                return obj;
+            }
+        }
+        return null;
+    },
+
+    draw: function (camera) {
+        if (!(camera instanceof ZeroGIS.PerspectiveCamera)) {
+            throw "invalid camera: not World.PerspectiveCamera";
+        }
+
+        for (var i = 0; i < this.children.length; i++) {
+            var obj = this.children[i];
+            if (obj) {
+                if (obj.visible) {
+                    obj.draw(camera);
+                }
+            }
+        }
+    },
+
+    worldTranslate: function (x, y, z) {
+        this.matrix.worldTranslate(x, y, z);
+    },
+
+    localTranslate: function (x, y, z) {
+        this.matrix.localTranslate(x, y, z);
+    },
+
+    worldScale: function (scaleX, scaleY, scaleZ) {
+        this.matrix.worldScale(scaleX, scaleY, scaleZ);
+    },
+
+    localScale: function (scaleX, scaleY, scaleZ) {
+        this.matrix.localScale(scaleX, scaleY, scaleZ);
+    },
+
+    worldRotateX: function (radian) {
+        this.matrix.worldRotateX(radian);
+    },
+
+    worldRotateY: function (radian) {
+        this.matrix.worldRotateY(radian);
+    },
+
+    worldRotateZ: function (radian) {
+        this.matrix.worldRotateZ(radian);
+    },
+
+    worldRotateByVector: function (radian, vector) {
+        this.matrix.worldRotateByVector(radian, vector);
+    },
+
+    localRotateX: function (radian) {
+        this.matrix.localRotateX(radian);
+    },
+
+    localRotateY: function (radian) {
+        this.matrix.localRotateY(radian);
+    },
+
+    localRotateZ: function (radian) {
+        this.matrix.localRotateZ(radian);
+    },
+
+    //localVector指的是相对于模型坐标系中的向量
+    localRotateByVector: function (radian, localVector) {
+        this.matrix.localRotateByVector(radian, localVector);
+    }
+};
 
 
 /**
-* TextureMaterial
+* 场景
 */
-ZeroGIS.Object3D.TextureMaterial = function (args) {
+ZeroGIS.Scene = function (args) {
+    ZeroGIS.Object3DComponents.apply(this, arguments);
+};
+
+ZeroGIS.Scene.prototype = new ZeroGIS.Object3DComponents();
+
+ZeroGIS.Scene.prototype.constructor = ZeroGIS.Scene;
+
+
+/**
+* 纹理材质
+*/
+ZeroGIS.TextureMaterial = function (args) {
     if (args) {
         this.texture = gl.createTexture();
         this.image = null;
@@ -2743,14 +2775,14 @@ ZeroGIS.Object3D.TextureMaterial = function (args) {
     }
 };
 
-ZeroGIS.Object3D.TextureMaterial.prototype.setImage = function (image) {
+ZeroGIS.TextureMaterial.prototype.setImage = function (image) {
     if (image instanceof Image && image.width > 0 && image.height > 0) {
         this.image = image;
         this.onLoad();
     }
 };
 
-ZeroGIS.Object3D.TextureMaterial.prototype.setImageUrl = function (url) {
+ZeroGIS.TextureMaterial.prototype.setImageUrl = function (url) {
     if (!ZeroGIS.Utils.isString(url)) {
         throw "invalid url: not string";
     }
@@ -2761,7 +2793,7 @@ ZeroGIS.Object3D.TextureMaterial.prototype.setImageUrl = function (url) {
 };
 
 //图片加载完成时触发
-ZeroGIS.Object3D.TextureMaterial.prototype.onLoad = function () {
+ZeroGIS.TextureMaterial.prototype.onLoad = function () {
     //要考虑纹理已经被移除掉了图片才进入onLoad这种情况
     if (this.delete) {
         return;
@@ -2784,7 +2816,7 @@ ZeroGIS.Object3D.TextureMaterial.prototype.onLoad = function () {
 };
 
 //释放显卡中的texture资源
-ZeroGIS.Object3D.TextureMaterial.prototype.releaseTexture = function () {
+ZeroGIS.TextureMaterial.prototype.releaseTexture = function () {
     if (gl.isTexture(this.texture)) {
         gl.deleteTexture(this.texture);
         this.delete = true;
@@ -2792,37 +2824,36 @@ ZeroGIS.Object3D.TextureMaterial.prototype.releaseTexture = function () {
 };
 
 /**
-* TileMaterial
+* 瓦片材质
 */
-ZeroGIS.Object3D.TileMaterial = function (args) {
+ZeroGIS.TileMaterial = function (args) {
     if (args) {
         if (!args.image && typeof args.url == "string") {
-            var tileImage = ZeroGIS.Image1.get(args.url);
+            var tileImage = ZeroGIS.Image.get(args.url);
             if (tileImage) {
                 args.image = tileImage;
                 delete args.url;
             }
         }
         this.level = typeof args.level == "number" && args.level >= 0 ? args.level : 20;
-        ZeroGIS.Object3D.TextureMaterial.apply(this, arguments);
+        ZeroGIS.TextureMaterial.apply(this, arguments);
     }
 };
 
-ZeroGIS.Object3D.TileMaterial.prototype = new ZeroGIS.Object3D.TextureMaterial();
+ZeroGIS.TileMaterial.prototype = new ZeroGIS.TextureMaterial();
 
-ZeroGIS.Object3D.TileMaterial.prototype.constructor = ZeroGIS.Object3D.TileMaterial;
+ZeroGIS.TileMaterial.prototype.constructor = ZeroGIS.TileMaterial;
 
-ZeroGIS.Object3D.TileMaterial.prototype.onLoad = function (event) {
-    if (this.level <= ZeroGIS.Image1.MAX_LEVEL) {
-        ZeroGIS.Image1.add(this.image.src, this.image);
+ZeroGIS.TileMaterial.prototype.onLoad = function (event) {
+    if (this.level <= ZeroGIS.Image.MAX_LEVEL) {
+        ZeroGIS.Image.add(this.image.src, this.image);
     }
-    ZeroGIS.Object3D.TextureMaterial.prototype.onLoad.apply(this, arguments);
+    ZeroGIS.TextureMaterial.prototype.onLoad.apply(this, arguments);
 };
 
 /**
-* Tile
+* 瓦片
 */
-
 ZeroGIS.Tile = function (args) { //args中包含level、row、column、url即可
     if (args) {
         this.subTiledLayer = null;
@@ -2883,7 +2914,7 @@ ZeroGIS.Tile.prototype.setTileInfo = function (args) {
         level: this.level,
         url: this.url
     };
-    this.material = new ZeroGIS.Object3D.TileMaterial(matArgs);
+    this.material = new ZeroGIS.TileMaterial(matArgs);
 };
 
 /**
@@ -3045,7 +3076,7 @@ ZeroGIS.Tile.prototype.destroy = function () {
 
 
 /**
-* TileGrid
+* 瓦片网格
 */
 ZeroGIS.TileGrid = function (level, row, column) {
     if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
@@ -3091,7 +3122,7 @@ ZeroGIS.TileGrid.prototype.getAncestor = function (ancestorLevel) {
 };
 
 /**
-* MathUtils
+* GIS数学工具
 */
 ZeroGIS.MathUtils = {
     ONE_RADIAN_EQUAL_DEGREE: 57.29577951308232, //180/Math.PI
@@ -3202,7 +3233,7 @@ ZeroGIS.MathUtils.getTriangleArea = function (v1, v2, v3) {
     var v2Copy = v2.getCopy();
     var v3Copy = v3.getCopy();
     var direction = v3Copy.minus(v2Copy);
-    var line = new ZeroGIS.Object3D.Line(v2Copy, direction);
+    var line = new ZeroGIS.Line(v2Copy, direction);
     var h = this.getLengthFromVerticeToLine(v1Copy, line);
     var w = this.getLengthFromVerticeToVertice(v2Copy, v3Copy);
     var area = 0.5 * w * h;
@@ -3326,7 +3357,7 @@ ZeroGIS.MathUtils.getVerticeVerticalIntersectPointWidthPlan = function (vertice,
 };
 
 ZeroGIS.MathUtils.getIntersectPointByLineAdPlan = function (line, plan) {
-    if (!(line instanceof ZeroGIS.Object3D.Line)) {
+    if (!(line instanceof ZeroGIS.Line)) {
         throw "invalid line";
     }
     if (!(plan instanceof ZeroGIS.Object3D.Plan)) {
@@ -3360,7 +3391,7 @@ ZeroGIS.MathUtils.getIntersectPointByLineAdPlan = function (line, plan) {
  * @return {Array}
  */
 ZeroGIS.MathUtils.getLineIntersectPointWithEarth = function (line) {
-    if (!(line instanceof ZeroGIS.Object3D.Line)) {
+    if (!(line instanceof ZeroGIS.Line)) {
         throw "invalid line";
     }
     var result = [];
@@ -4125,7 +4156,7 @@ ZeroGIS.MathUtils.calculateNormals = function (vs, ind) {
 };
 
 /**
-* Event
+* 地图事件
 */
 ZeroGIS.Event = {
     canvas: null,
@@ -4334,7 +4365,7 @@ ZeroGIS.Event = {
 };
 
 /**
-* Globe
+* 地球
 */
 ZeroGIS.Globe = function (canvas, args) {
     if (!(canvas instanceof HTMLCanvasElement)) {
@@ -4350,12 +4381,12 @@ ZeroGIS.Globe = function (canvas, args) {
     this.scene = null;
     this.camera = null;
     this.tiledLayer = null;
-    var vs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.VS_CONTENT;
-    var fs_content = ZeroGIS.Object3D.ShaderContent.SIMPLE_SHADER.FS_CONTENT;
-    this.renderer = ZeroGIS.renderer = new ZeroGIS.Object3D.WebGLRenderer(canvas, vs_content, fs_content);
-    this.scene = new ZeroGIS.Object3D.Scene();
+    var vs_content = ZeroGIS.ShaderContent.SIMPLE_SHADER.VS_CONTENT;
+    var fs_content = ZeroGIS.ShaderContent.SIMPLE_SHADER.FS_CONTENT;
+    this.renderer = ZeroGIS.renderer = new ZeroGIS.WebGLRenderer(canvas, vs_content, fs_content);
+    this.scene = new ZeroGIS.Scene();
     var radio = canvas.width / canvas.height;
-    this.camera = new ZeroGIS.Object3D.PerspectiveCamera(30, radio, 1.0, 20000000.0);
+    this.camera = new ZeroGIS.PerspectiveCamera(30, radio, 1.0, 20000000.0);
     this.renderer.bindScene(this.scene);
     this.renderer.bindCamera(this.camera);
     this.setLevel(0);
@@ -4373,7 +4404,7 @@ ZeroGIS.Globe.prototype = {
 
         clearTimeout(this.idTimeOut);
         //在更换切片图层的类型时清空缓存的图片
-        ZeroGIS.Image1.clear();
+        ZeroGIS.Image.clear();
         if (this.tiledLayer) {
             var b = this.scene.remove(this.tiledLayer);
             if (!b) {
@@ -4384,13 +4415,13 @@ ZeroGIS.Globe.prototype = {
         this.tiledLayer = tiledLayer;
         this.scene.add(this.tiledLayer);
         //添加第0级的子图层
-        var subLayer0 = new ZeroGIS.TiledLayer.SubTiledLayer({
+        var subLayer0 = new ZeroGIS.SubTiledLayer({
             level: 0
         });
         this.tiledLayer.add(subLayer0);
 
         //要对level为1的图层进行特殊处理，在创建level为1时就创建其中的全部的四个tile
-        var subLayer1 = new ZeroGIS.TiledLayer.SubTiledLayer({
+        var subLayer1 = new ZeroGIS.SubTiledLayer({
             level: 1
         });
         this.tiledLayer.add(subLayer1);
@@ -4421,7 +4452,7 @@ ZeroGIS.Globe.prototype = {
         }
         level = level > this.MAX_LEVEL ? this.MAX_LEVEL : level; //超过最大的渲染级别就不渲染
         if (level != this.CURRENT_LEVEL) {
-            if (this.camera instanceof ZeroGIS.Object3D.PerspectiveCamera) {
+            if (this.camera instanceof ZeroGIS.PerspectiveCamera) {
                 //要先执行camera.setLevel,然后再刷新
                 this.camera.setLevel(level);
                 this.refresh();
@@ -4519,20 +4550,20 @@ ZeroGIS.Globe.prototype = {
 
 
 /**
-* TiledLayer
+* 瓦片图层
 */
 ZeroGIS.TiledLayer = function (args) {
-    ZeroGIS.Object3D.Object3DComponents.apply(this, arguments);
+    ZeroGIS.Object3DComponents.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.prototype = new ZeroGIS.Object3D.Object3DComponents();
+ZeroGIS.TiledLayer.prototype = new ZeroGIS.Object3DComponents();
 ZeroGIS.TiledLayer.prototype.constructor = ZeroGIS.TiledLayer;
 
 ZeroGIS.TiledLayer.prototype.add = function (subTiledLayer) {
-    if (!(subTiledLayer instanceof ZeroGIS.TiledLayer.SubTiledLayer)) {
+    if (!(subTiledLayer instanceof ZeroGIS.SubTiledLayer)) {
         throw "invalid subTiledLayer: not World.SubTiledLayer";
     }
-    ZeroGIS.Object3D.Object3DComponents.prototype.add.apply(this, arguments);
+    ZeroGIS.Object3DComponents.prototype.add.apply(this, arguments);
     subTiledLayer.tiledLayer = this;
 };
 
@@ -4564,7 +4595,7 @@ ZeroGIS.TiledLayer.prototype.updateSubLayerCount = function (level) {
             var args = {
                 level: i + subLayerCount
             };
-            subLayer = new ZeroGIS.TiledLayer.SubTiledLayer(args);
+            subLayer = new ZeroGIS.SubTiledLayer(args);
             this.add(subLayer);
         }
     } else if (deltaLevel < 0) {
@@ -4584,10 +4615,10 @@ ZeroGIS.TiledLayer.prototype.updateSubLayerCount = function (level) {
 };
 
 /**
-* 
+* 子瓦片图层
 */
-ZeroGIS.TiledLayer.SubTiledLayer = function (args) {
-    ZeroGIS.Object3D.Object3DComponents.apply(this, arguments);
+ZeroGIS.SubTiledLayer = function (args) {
+    ZeroGIS.Object3DComponents.apply(this, arguments);
     this.level = -1;
     //该级要请求的高程数据的层级，7[8,9,10];10[11,12,13];13[14,15,16];16[17,18,19]
     this.elevationLevel = -1;
@@ -4600,11 +4631,11 @@ ZeroGIS.TiledLayer.SubTiledLayer = function (args) {
     }
 };
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype = new ZeroGIS.Object3D.Object3DComponents();
+ZeroGIS.SubTiledLayer.prototype = new ZeroGIS.Object3DComponents();
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.SubTiledLayer;
+ZeroGIS.SubTiledLayer.prototype.constructor = ZeroGIS.SubTiledLayer;
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.draw = function (camera) {
+ZeroGIS.SubTiledLayer.prototype.draw = function (camera) {
     if (this.level >= ZeroGIS.TERRAIN_LEVEL && ZeroGIS.globe && ZeroGIS.globe.pitch <= ZeroGIS.TERRAIN_PITCH) {
         gl.clear(gl.DEPTH_BUFFER_BIT);
         gl.clearDepth(1);
@@ -4612,28 +4643,28 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.draw = function (camera) {
     } else {
         gl.disable(gl.DEPTH_TEST);
     }
-    ZeroGIS.Object3D.Object3DComponents.prototype.draw.apply(this, arguments);
+    ZeroGIS.Object3DComponents.prototype.draw.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.add = function (tile) {
+ZeroGIS.SubTiledLayer.prototype.add = function (tile) {
     if (!(tile instanceof ZeroGIS.Tile)) {
         throw "invalid tile: not Tile";
     }
     if (tile.level == this.level) {
-        ZeroGIS.Object3D.Object3DComponents.prototype.add.apply(this, arguments);
+        ZeroGIS.Object3DComponents.prototype.add.apply(this, arguments);
         tile.subTiledLayer = this;
     }
 };
 
 //调用其父的getImageUrl
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.getImageUrl = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+ZeroGIS.SubTiledLayer.prototype.getImageUrl = function (level, row, column) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var url = "";
@@ -4644,20 +4675,20 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.getImageUrl = function (level, row, c
 };
 
 //重写Object3DComponents的destroy方法
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.destroy = function () {
-    ZeroGIS.Object3D.Object3DComponents.prototype.destroy.apply(this, arguments);
+ZeroGIS.SubTiledLayer.prototype.destroy = function () {
+    ZeroGIS.Object3DComponents.prototype.destroy.apply(this, arguments);
     this.tiledLayer = null;
 };
 
 //根据level、row、column查找tile，可以供调试用
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.findTile = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+ZeroGIS.SubTiledLayer.prototype.findTile = function (level, row, column) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var length = this.children.length;
@@ -4671,7 +4702,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.findTile = function (level, row, colu
 };
 
 //根据传入的tiles信息进行更新其children
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.updateTiles = function (visibleTileGrids, bAddNew) { //camera,options
+ZeroGIS.SubTiledLayer.prototype.updateTiles = function (visibleTileGrids, bAddNew) { //camera,options
     //var visibleTileGrids = camera.getVisibleTilesByLevel(this.level,options);
     //检查visibleTileGrids中是否存在指定的切片信息
     function checkTileExist(tileArray, lev, row, col) {
@@ -4732,7 +4763,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.updateTiles = function (visibleTileGr
 };
 
 //如果bForce为true，则表示强制显示为三维，不考虑level
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkTerrain = function (bForce) {
+ZeroGIS.SubTiledLayer.prototype.checkTerrain = function (bForce) {
     var globe = ZeroGIS.globe;
     var show3d = bForce === true ? true : this.level >= ZeroGIS.TERRAIN_LEVEL;
     if (show3d && globe && globe.camera && globe.camera.pitch < ZeroGIS.TERRAIN_PITCH) {
@@ -4746,7 +4777,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkTerrain = function (bForce) {
 
 //根据当前子图层下的tiles获取其对应的祖先高程切片的TileGrid //getAncestorElevationTileGrids
 //7 8 9 10; 10 11 12 13; 13 14 15 16; 16 17 18 19;
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.requestElevations = function () {
+ZeroGIS.SubTiledLayer.prototype.requestElevations = function () {
     var result = [];
     if (this.level > ZeroGIS.ELEVATION_LEVEL) {
         var tiles = this.children;
@@ -4774,7 +4805,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.requestElevations = function () {
     }
 };
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkIfLoaded = function () {
+ZeroGIS.SubTiledLayer.prototype.checkIfLoaded = function () {
     for (var i = 0; i < this.children.length; i++) {
         var tile = this.children[i];
         if (tile) {
@@ -4788,16 +4819,16 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkIfLoaded = function () {
 };
 
 /**
-* GoogleTiledLayer
+* 谷歌瓦片图层
 */
-ZeroGIS.TiledLayer.GoogleTiledLayer = function (args) {
+ZeroGIS.GoogleTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.GoogleTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.GoogleTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.GoogleTiledLayer;
+ZeroGIS.GoogleTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.GoogleTiledLayer.prototype.constructor = ZeroGIS.GoogleTiledLayer;
 
-ZeroGIS.TiledLayer.GoogleTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.GoogleTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var sum = level + row + column;
     var idx = 1 + sum % 3;
@@ -4807,16 +4838,16 @@ ZeroGIS.TiledLayer.GoogleTiledLayer.prototype.getImageUrl = function (level, row
 
 
 /**
-* BingTiledLayer
+* 必应瓦片图层
 */
-ZeroGIS.TiledLayer.BingTiledLayer = function (args) {
+ZeroGIS.BingTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.BingTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.BingTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.BingTiledLayer;
+ZeroGIS.BingTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.BingTiledLayer.prototype.constructor = ZeroGIS.BingTiledLayer;
 
-ZeroGIS.TiledLayer.BingTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.BingTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var url = "";
     var tileX = column;
@@ -4856,16 +4887,16 @@ ZeroGIS.TiledLayer.BingTiledLayer.prototype.getImageUrl = function (level, row, 
 };
 
 /**
-* OpenStreetMap
+* OpenStreetMap瓦片图层
 */
-ZeroGIS.TiledLayer.OsmTiledLayer = function (args) {
+ZeroGIS.OsmTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.OsmTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.OsmTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.OsmTiledLayer;
+ZeroGIS.OsmTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.OsmTiledLayer.prototype.constructor = ZeroGIS.OsmTiledLayer;
 
-ZeroGIS.TiledLayer.OsmTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.OsmTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var sum = level + row + column;
     var idx = sum % 3;
@@ -4875,15 +4906,17 @@ ZeroGIS.TiledLayer.OsmTiledLayer.prototype.getImageUrl = function (level, row, c
 };
 
 /**
-* SosoTiledLayer
+* Soso瓦片图层
 */
 
-ZeroGIS.TiledLayer.SosoTiledLayer = function (args) {
+ZeroGIS.SosoTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
-ZeroGIS.TiledLayer.SosoTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.SosoTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.SosoTiledLayer;
-ZeroGIS.TiledLayer.SosoTiledLayer.prototype.getImageUrl = function (level, row, column) {
+
+ZeroGIS.SosoTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.SosoTiledLayer.prototype.constructor = ZeroGIS.SosoTiledLayer;
+
+ZeroGIS.SosoTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var url = "";
     var tileCount = Math.pow(2, level);
@@ -4901,17 +4934,17 @@ ZeroGIS.TiledLayer.SosoTiledLayer.prototype.getImageUrl = function (level, row, 
 
 
 /**
-* TiandituTiledLayer
+* 天地图瓦片图层
 */
-ZeroGIS.TiledLayer.TiandituTiledLayer = function (args) {
+ZeroGIS.TiandituTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.TiandituTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.TiandituTiledLayer.prototype = new ZeroGIS.TiledLayer();
 
-ZeroGIS.TiledLayer.TiandituTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.TiandituTiledLayer;
+ZeroGIS.TiandituTiledLayer.prototype.constructor = ZeroGIS.TiandituTiledLayer;
 
-ZeroGIS.TiledLayer.TiandituTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.TiandituTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var url = "";
     var sum = level + row + column;
@@ -4920,4 +4953,84 @@ ZeroGIS.TiledLayer.TiandituTiledLayer.prototype.getImageUrl = function (level, r
     return url;
 };
 
+
+/**
+* 诺基亚瓦片图层
+*/
+ZeroGIS.NokiaTiledLayer = function (args) {
+    ZeroGIS.TiledLayer.apply(this, arguments);
+};
+
+ZeroGIS.NokiaTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.NokiaTiledLayer.prototype.constructor = ZeroGIS.NokiaTiledLayer;
+
+ZeroGIS.NokiaTiledLayer.prototype.getImageUrl = function (level, row, column) {
+    ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
+    var sum = level + row + column;
+    var idx = 1 + sum % 4; //1,2,3,4
+    //https://1.base.maps.api.here.com/maptile/2.1/maptile/2ae1d8fbb0/normal.day/4/9/7/512/png8?app_id=xWVIueSv6JL0aJ5xqTxb&app_code=djPZyynKsbTjIUDOBcHZ2g&lg=eng&ppi=72&pview=DEF
+    var url = "//" + idx + ".base.maps.api.here.com/maptile/2.1/maptile/2ae1d8fbb0/normal.day/" + level + "/" + column + "/" + row + "/512/png8?app_id=xWVIueSv6JL0aJ5xqTxb&app_code=djPZyynKsbTjIUDOBcHZ2g&lg=eng&ppi=72&pview=DEF";
+    return url;
+};
+
+
+/**
+* ArcGIS瓦片图层
+*/
+ZeroGIS.ArcGISTiledLayer = function (args) {
+    ZeroGIS.TiledLayer.apply(this, arguments);
+    this.service = "";
+    if (args) {
+        if (args.url) {
+            this.service = args.url;
+        }
+    }
+};
+
+ZeroGIS.ArcGISTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.ArcGISTiledLayer.prototype.constructor = ZeroGIS.ArcGISTiledLayer;
+
+ZeroGIS.ArcGISTiledLayer.prototype.getImageUrl = function (level, row, column) {
+    ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
+    var url = ZeroGIS.proxy + "?" + this.service + "/tile/" + level + "/" + row + "/" + column;
+    return url;
+};
+
+
+/**
+* 高德地图瓦片图层
+*/
+ZeroGIS.AutonaviTiledLayer = function (args) {
+    ZeroGIS.TiledLayer.apply(this, arguments);
+};
+
+ZeroGIS.AutonaviTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.AutonaviTiledLayer.prototype.constructor = ZeroGIS.AutonaviTiledLayer;
+
+ZeroGIS.AutonaviTiledLayer.prototype.getImageUrl = function (level, row, column) {
+    ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
+    var sum = level + row + column;
+    var serverIdx = 1 + sum % 4; //1、2、3、4
+    var url = ZeroGIS.proxy + "?//webrd0" + serverIdx + ".is.autonavi.com/appmaptile?x=" + column + "&y=" + row + "&z=" + level + "&lang=zh_cn&size=1&scale=1&style=8";
+    return url;
+};
+
+/**
+* 混合瓦片图层
+*/
+ZeroGIS.BlendTiledLayer = function (args) {
+    ZeroGIS.TiledLayer.apply(this, arguments);
+};
+
+ZeroGIS.BlendTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.BlendTiledLayer.prototype.constructor = ZeroGIS.BlendTiledLayer;
+
+ZeroGIS.BlendTiledLayer.prototype.getImageUrl = function (level, row, column) {
+    ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
+    var array = [NokiaTiledLayer, GoogleTiledLayer, OsmTiledLayer];
+    var sum = level + row + column;
+    var idx = sum % 3;
+    var url = array[idx].prototype.getImageUrl.apply(this, arguments);
+    return url;
+};
 
