@@ -109,7 +109,7 @@ ZeroGIS.WebGLRenderer = function (canvas, vertexShaderText, fragmentShaderText) 
 
     initShaders(vertexShaderText, fragmentShaderText);
 
-    gl.clearColor(255, 255, 255, 1.0);
+    gl.clearColor(0, 0, 0, 1.0);
     //gl.enable(gl.DEPTH_TEST);
     gl.disable(gl.DEPTH_TEST); //此处禁用深度测试是为了解决两个不同层级的切片在拖动时一起渲染会导致屏闪的问题
     gl.depthFunc(gl.LEQUAL);
