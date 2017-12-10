@@ -1,7 +1,7 @@
 ﻿/**
-* ArcGISTiledLayer
+* ArcGIS瓦片图层
 */
-ZeroGIS.TiledLayer.ArcGISTiledLayer = function (args) {
+ZeroGIS.ArcGISTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
     this.service = "";
     if (args) {
@@ -11,11 +11,11 @@ ZeroGIS.TiledLayer.ArcGISTiledLayer = function (args) {
     }
 };
 
-ZeroGIS.TiledLayer.ArcGISTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.ArcGISTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.ArcGISTiledLayer;
+ZeroGIS.ArcGISTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.ArcGISTiledLayer.prototype.constructor = ZeroGIS.ArcGISTiledLayer;
 
-ZeroGIS.TiledLayer.ArcGISTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.ArcGISTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
-    var url = Kernel.proxy + "?" + this.service + "/tile/" + level + "/" + row + "/" + column;
+    var url = ZeroGIS.proxy + "?" + this.service + "/tile/" + level + "/" + row + "/" + column;
     return url;
 };

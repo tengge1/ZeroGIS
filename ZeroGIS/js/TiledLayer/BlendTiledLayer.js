@@ -1,14 +1,14 @@
 ﻿/**
-* BlendTiledLayer
+* 混合瓦片图层
 */
-ZeroGIS.TiledLayer.BlendTiledLayer = function (args) {
+ZeroGIS.BlendTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.BlendTiledLayer.prototype = new TiledLayer();
-ZeroGIS.TiledLayer.BlendTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.BlendTiledLayer;
+ZeroGIS.BlendTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.BlendTiledLayer.prototype.constructor = ZeroGIS.BlendTiledLayer;
 
-ZeroGIS.TiledLayer.BlendTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.BlendTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var array = [NokiaTiledLayer, GoogleTiledLayer, OsmTiledLayer];
     var sum = level + row + column;

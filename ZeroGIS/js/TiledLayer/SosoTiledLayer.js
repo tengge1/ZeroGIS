@@ -1,13 +1,15 @@
 ﻿/**
-* SosoTiledLayer
+* Soso瓦片图层
 */
 
-ZeroGIS.TiledLayer.SosoTiledLayer = function (args) {
+ZeroGIS.SosoTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
-ZeroGIS.TiledLayer.SosoTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.SosoTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.SosoTiledLayer;
-ZeroGIS.TiledLayer.SosoTiledLayer.prototype.getImageUrl = function (level, row, column) {
+
+ZeroGIS.SosoTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.SosoTiledLayer.prototype.constructor = ZeroGIS.SosoTiledLayer;
+
+ZeroGIS.SosoTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var url = "";
     var tileCount = Math.pow(2, level);

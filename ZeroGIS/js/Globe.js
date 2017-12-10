@@ -1,5 +1,5 @@
 ﻿/**
-* Globe
+* 地球
 */
 ZeroGIS.Globe = function (canvas, args) {
     if (!(canvas instanceof HTMLCanvasElement)) {
@@ -49,13 +49,13 @@ ZeroGIS.Globe.prototype = {
         this.tiledLayer = tiledLayer;
         this.scene.add(this.tiledLayer);
         //添加第0级的子图层
-        var subLayer0 = new ZeroGIS.TiledLayer.SubTiledLayer({
+        var subLayer0 = new ZeroGIS.SubTiledLayer({
             level: 0
         });
         this.tiledLayer.add(subLayer0);
 
         //要对level为1的图层进行特殊处理，在创建level为1时就创建其中的全部的四个tile
-        var subLayer1 = new ZeroGIS.TiledLayer.SubTiledLayer({
+        var subLayer1 = new ZeroGIS.SubTiledLayer({
             level: 1
         });
         this.tiledLayer.add(subLayer1);

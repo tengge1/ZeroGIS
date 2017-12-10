@@ -1,14 +1,14 @@
 ﻿/**
-* NokiaTiledLayer
+* 诺基亚瓦片图层
 */
-ZeroGIS.TiledLayer.NokiaTiledLayer = function (args) {
+ZeroGIS.NokiaTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.NokiaTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.NokiaTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.NokiaTiledLayer;
+ZeroGIS.NokiaTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.NokiaTiledLayer.prototype.constructor = ZeroGIS.NokiaTiledLayer;
 
-ZeroGIS.TiledLayer.NokiaTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.NokiaTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var sum = level + row + column;
     var idx = 1 + sum % 4; //1,2,3,4

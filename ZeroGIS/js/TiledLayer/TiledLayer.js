@@ -1,5 +1,5 @@
 ﻿/**
-* TiledLayer
+* 瓦片图层
 */
 ZeroGIS.TiledLayer = function (args) {
     ZeroGIS.Object3DComponents.apply(this, arguments);
@@ -9,7 +9,7 @@ ZeroGIS.TiledLayer.prototype = new ZeroGIS.Object3DComponents();
 ZeroGIS.TiledLayer.prototype.constructor = ZeroGIS.TiledLayer;
 
 ZeroGIS.TiledLayer.prototype.add = function (subTiledLayer) {
-    if (!(subTiledLayer instanceof ZeroGIS.TiledLayer.SubTiledLayer)) {
+    if (!(subTiledLayer instanceof ZeroGIS.SubTiledLayer)) {
         throw "invalid subTiledLayer: not World.SubTiledLayer";
     }
     ZeroGIS.Object3DComponents.prototype.add.apply(this, arguments);
@@ -44,7 +44,7 @@ ZeroGIS.TiledLayer.prototype.updateSubLayerCount = function (level) {
             var args = {
                 level: i + subLayerCount
             };
-            subLayer = new ZeroGIS.TiledLayer.SubTiledLayer(args);
+            subLayer = new ZeroGIS.SubTiledLayer(args);
             this.add(subLayer);
         }
     } else if (deltaLevel < 0) {

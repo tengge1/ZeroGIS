@@ -1,14 +1,14 @@
 ﻿/**
-* BingTiledLayer
+* 必应瓦片图层
 */
-ZeroGIS.TiledLayer.BingTiledLayer = function (args) {
+ZeroGIS.BingTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.BingTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.BingTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.BingTiledLayer;
+ZeroGIS.BingTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.BingTiledLayer.prototype.constructor = ZeroGIS.BingTiledLayer;
 
-ZeroGIS.TiledLayer.BingTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.BingTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var url = "";
     var tileX = column;

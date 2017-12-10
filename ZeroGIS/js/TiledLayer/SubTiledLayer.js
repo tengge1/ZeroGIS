@@ -1,7 +1,7 @@
 ﻿/**
-* 
+* 子瓦片图层
 */
-ZeroGIS.TiledLayer.SubTiledLayer = function (args) {
+ZeroGIS.SubTiledLayer = function (args) {
     ZeroGIS.Object3DComponents.apply(this, arguments);
     this.level = -1;
     //该级要请求的高程数据的层级，7[8,9,10];10[11,12,13];13[14,15,16];16[17,18,19]
@@ -15,11 +15,11 @@ ZeroGIS.TiledLayer.SubTiledLayer = function (args) {
     }
 };
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype = new ZeroGIS.Object3DComponents();
+ZeroGIS.SubTiledLayer.prototype = new ZeroGIS.Object3DComponents();
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.SubTiledLayer;
+ZeroGIS.SubTiledLayer.prototype.constructor = ZeroGIS.SubTiledLayer;
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.draw = function (camera) {
+ZeroGIS.SubTiledLayer.prototype.draw = function (camera) {
     if (this.level >= ZeroGIS.TERRAIN_LEVEL && ZeroGIS.globe && ZeroGIS.globe.pitch <= ZeroGIS.TERRAIN_PITCH) {
         gl.clear(gl.DEPTH_BUFFER_BIT);
         gl.clearDepth(1);
@@ -30,7 +30,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.draw = function (camera) {
     ZeroGIS.Object3DComponents.prototype.draw.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.add = function (tile) {
+ZeroGIS.SubTiledLayer.prototype.add = function (tile) {
     if (!(tile instanceof ZeroGIS.Tile)) {
         throw "invalid tile: not Tile";
     }
@@ -41,14 +41,14 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.add = function (tile) {
 };
 
 //调用其父的getImageUrl
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.getImageUrl = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+ZeroGIS.SubTiledLayer.prototype.getImageUrl = function (level, row, column) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var url = "";
@@ -59,20 +59,20 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.getImageUrl = function (level, row, c
 };
 
 //重写Object3DComponents的destroy方法
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.destroy = function () {
+ZeroGIS.SubTiledLayer.prototype.destroy = function () {
     ZeroGIS.Object3DComponents.prototype.destroy.apply(this, arguments);
     this.tiledLayer = null;
 };
 
 //根据level、row、column查找tile，可以供调试用
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.findTile = function (level, row, column) {
-    if (!Utils.isNonNegativeInteger(level)) {
+ZeroGIS.SubTiledLayer.prototype.findTile = function (level, row, column) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(level)) {
         throw "invalid level";
     }
-    if (!Utils.isNonNegativeInteger(row)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(row)) {
         throw "invalid row";
     }
-    if (!Utils.isNonNegativeInteger(column)) {
+    if (!ZeroGIS.Utils.isNonNegativeInteger(column)) {
         throw "invalid column";
     }
     var length = this.children.length;
@@ -86,7 +86,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.findTile = function (level, row, colu
 };
 
 //根据传入的tiles信息进行更新其children
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.updateTiles = function (visibleTileGrids, bAddNew) { //camera,options
+ZeroGIS.SubTiledLayer.prototype.updateTiles = function (visibleTileGrids, bAddNew) { //camera,options
     //var visibleTileGrids = camera.getVisibleTilesByLevel(this.level,options);
     //检查visibleTileGrids中是否存在指定的切片信息
     function checkTileExist(tileArray, lev, row, col) {
@@ -147,7 +147,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.updateTiles = function (visibleTileGr
 };
 
 //如果bForce为true，则表示强制显示为三维，不考虑level
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkTerrain = function (bForce) {
+ZeroGIS.SubTiledLayer.prototype.checkTerrain = function (bForce) {
     var globe = ZeroGIS.globe;
     var show3d = bForce === true ? true : this.level >= ZeroGIS.TERRAIN_LEVEL;
     if (show3d && globe && globe.camera && globe.camera.pitch < ZeroGIS.TERRAIN_PITCH) {
@@ -161,7 +161,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkTerrain = function (bForce) {
 
 //根据当前子图层下的tiles获取其对应的祖先高程切片的TileGrid //getAncestorElevationTileGrids
 //7 8 9 10; 10 11 12 13; 13 14 15 16; 16 17 18 19;
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.requestElevations = function () {
+ZeroGIS.SubTiledLayer.prototype.requestElevations = function () {
     var result = [];
     if (this.level > ZeroGIS.ELEVATION_LEVEL) {
         var tiles = this.children;
@@ -189,7 +189,7 @@ ZeroGIS.TiledLayer.SubTiledLayer.prototype.requestElevations = function () {
     }
 };
 
-ZeroGIS.TiledLayer.SubTiledLayer.prototype.checkIfLoaded = function () {
+ZeroGIS.SubTiledLayer.prototype.checkIfLoaded = function () {
     for (var i = 0; i < this.children.length; i++) {
         var tile = this.children[i];
         if (tile) {

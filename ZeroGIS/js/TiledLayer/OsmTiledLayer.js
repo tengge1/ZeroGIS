@@ -1,14 +1,14 @@
 ﻿/**
-* OpenStreetMap
+* OpenStreetMap瓦片图层
 */
-ZeroGIS.TiledLayer.OsmTiledLayer = function (args) {
+ZeroGIS.OsmTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.OsmTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.OsmTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.OsmTiledLayer;
+ZeroGIS.OsmTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.OsmTiledLayer.prototype.constructor = ZeroGIS.OsmTiledLayer;
 
-ZeroGIS.TiledLayer.OsmTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.OsmTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var sum = level + row + column;
     var idx = sum % 3;

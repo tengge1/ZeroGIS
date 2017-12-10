@@ -1,15 +1,15 @@
 ﻿/**
-* TiandituTiledLayer
+* 天地图瓦片图层
 */
-ZeroGIS.TiledLayer.TiandituTiledLayer = function (args) {
+ZeroGIS.TiandituTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.TiandituTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.TiandituTiledLayer.prototype = new ZeroGIS.TiledLayer();
 
-ZeroGIS.TiledLayer.TiandituTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.TiandituTiledLayer;
+ZeroGIS.TiandituTiledLayer.prototype.constructor = ZeroGIS.TiandituTiledLayer;
 
-ZeroGIS.TiledLayer.TiandituTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.TiandituTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var url = "";
     var sum = level + row + column;

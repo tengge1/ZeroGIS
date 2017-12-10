@@ -1,14 +1,14 @@
 ﻿/**
-* GoogleTiledLayer
+* 谷歌瓦片图层
 */
-ZeroGIS.TiledLayer.GoogleTiledLayer = function (args) {
+ZeroGIS.GoogleTiledLayer = function (args) {
     ZeroGIS.TiledLayer.apply(this, arguments);
 };
 
-ZeroGIS.TiledLayer.GoogleTiledLayer.prototype = new ZeroGIS.TiledLayer();
-ZeroGIS.TiledLayer.GoogleTiledLayer.prototype.constructor = ZeroGIS.TiledLayer.GoogleTiledLayer;
+ZeroGIS.GoogleTiledLayer.prototype = new ZeroGIS.TiledLayer();
+ZeroGIS.GoogleTiledLayer.prototype.constructor = ZeroGIS.GoogleTiledLayer;
 
-ZeroGIS.TiledLayer.GoogleTiledLayer.prototype.getImageUrl = function (level, row, column) {
+ZeroGIS.GoogleTiledLayer.prototype.getImageUrl = function (level, row, column) {
     ZeroGIS.TiledLayer.prototype.getImageUrl.apply(this, arguments);
     var sum = level + row + column;
     var idx = 1 + sum % 3;

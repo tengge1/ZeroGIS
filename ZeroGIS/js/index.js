@@ -16,19 +16,19 @@ function changeTiledLayer() {
     var value = mapSelector.value;
     switch (value) {
         case "google":
-            newTiledLayer = new ZeroGIS.TiledLayer.GoogleTiledLayer();
+            newTiledLayer = new ZeroGIS.GoogleTiledLayer();
             break;
         case "bing":
-            newTiledLayer = new ZeroGIS.TiledLayer.BingTiledLayer();
+            newTiledLayer = new ZeroGIS.BingTiledLayer();
             break;
         case "osm":
-            newTiledLayer = new ZeroGIS.TiledLayer.OsmTiledLayer();
+            newTiledLayer = new ZeroGIS.OsmTiledLayer();
             break;
         case "soso":
-            newTiledLayer = new ZeroGIS.TiledLayer.SosoTiledLayer();
+            newTiledLayer = new ZeroGIS.SosoTiledLayer();
             break;
         case "tianditu":
-            newTiledLayer = new ZeroGIS.TiledLayer.TiandituTiledLayer();
+            newTiledLayer = new ZeroGIS.TiandituTiledLayer();
             break;
         default:
             break;
