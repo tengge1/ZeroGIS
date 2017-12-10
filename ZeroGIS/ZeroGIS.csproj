@@ -108,8 +108,10 @@
     <Content Include="js\ZeroGIS.js" />
     <Content Include="Newtonsoft.Json.dll" />
     <Content Include="Newtonsoft.Json.xml" />
+    <Content Include="old\Version.txt" />
     <Content Include="packages.config" />
     <Content Include="webpack4win.exe" />
+    <Content Include="old\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
